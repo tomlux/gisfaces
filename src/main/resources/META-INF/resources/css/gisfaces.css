@@ -1,0 +1,20 @@
+/* Copyright � 2013-2019 Chris Duncan (cduncan@gisfaces.com) - All Rights Reserved */
+
+.gisfaces-map-panel {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+.gisfaces-help-panel {
+	padding: 5px;
+	white-space: nowrap;
+}
+
+.esri-widget, .esri-basemap-gallery__item-title  {
+	color: rgb(79, 79, 79) !important;
+	font-family: 'Open Sans', sans-serif !important;
+	font-size: 12px !important;
+}

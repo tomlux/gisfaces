@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<facelet-taglib
+	version="2.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd">
+
+	<namespace>http://gisfaces.com</namespace>
+
+	<tag>
+		<description>Map custom component.</description>
+		<tag-name>map</tag-name>
+		<component>
+			<component-type>com.gisfaces.component.Map</component-type>
+		</component>
+		<attribute>
+			<description>The identifier for this component.</description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The rendered indicator for this component.</description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Panel for map control.</description>
+			<name>panel</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>WebMap portal item ID.</description>
+			<name>webmap</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map basemap layer. Valid values are "streets", "streets-vector", "streets-navigation-vector", "streets-night-vector", "streets-relief-vector", "satellite", "hybrid", "topo", "topo-vector", "oceans", "gray", "gray-vector", "dark-gray", "dark-gray-vector", "terrain", "national-geographic", and "osm". See the com.gisfaces.model.map.Basemap enum class.</description>
+			<name>basemap</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map latitude coordinate. Defaults to "39.828175".</description>
+			<name>latitude</name>
+			<required>false</required>
+			<type>java.lang.Double</type>
+		</attribute>
+		<attribute>
+			<description>Map longitude coordinate. Defaults to "-98.5795".</description>
+			<name>longitude</name>
+			<required>false</required>
+			<type>java.lang.Double</type>
+		</attribute>
+		<attribute>
+			<description>Map zoom level. Most ESRI background layers range from 0 to 16 or 23. Defaults to "3".</description>
+			<name>zoom</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>Map widgets color theme. Valid values are "light", "dark", "light-blue", "dark-blue", "light-green", "dark-green", "light-purple", "dark-purple", "light-red", "dark-red". Defaults to "light".</description>
+			<name>theme</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map view type. Valid values are "2d" and "3d". Defaults to "3d".</description>
+			<name>type</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map model.</description>
+			<name>model</name>
+			<required>false</required>
+			<type>com.gisfaces.model.map.MapModel</type>
+		</attribute>
+		<attribute>
+			<description>ESRI JavaScript API URL override. Defaults to "https://js.arcgis.com/4.11". Do not include the trailing slash.</description>
+			<name>jsapi</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>Map symbol custom component.</description>
+		<tag-name>symbol</tag-name>
+		<component>
+			<component-type>com.gisfaces.component.MapSymbol</component-type>
+		</component>
+		<attribute>
+			<description>The identifier for this component.</description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The rendered indicator for this component.</description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Map service URL.</description>
+			<name>url</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map layer number as defined in the map service.</description>
+			<name>layer</name>
+			<required>true</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>Map layer label for the requested symbol as defined by the map service attribute table alias name. Not required if the layer only has a single symbol.</description>
+			<name>label</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map symbol height in pixels. Defaults to the symbol height specified in the map service.</description>
+			<name>height</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>Map symbol width in pixels. Defaults to the symbol width specified in the map service.</description>
+			<name>width</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>Map symbol title text. Defaults to the symbol label specified in the map service.</description>
+			<name>title</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Map symbol alternate text. Defaults to the symbol label specified in the map service.</description>
+			<name>alt</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+	<tag>
+		<description>SVG custom component.</description>
+		<tag-name>svg</tag-name>
+		<component>
+			<component-type>com.gisfaces.component.Svg</component-type>
+		</component>
+		<attribute>
+			<description>The identifier for this component.</description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The rendered indicator for this component.</description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Title.</description>
+			<name>title</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Style.</description>
+			<name>style</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Style class.</description>
+			<name>styleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Height.</description>
+			<name>height</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>Width.</description>
+			<name>width</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>SVG path.</description>
+			<name>path</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>SVG fill color. Defaults to "#FFFFFF".</description>
+			<name>fillColor</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>SVG fill opacity. Valid values range from 0.0 to 1.0, inclusive. Defaults to "1.0".</description>
+			<name>fillOpacity</name>
+			<required>false</required>
+			<type>java.lang.Double</type>
+		</attribute>
+		<attribute>
+			<description>SVG stroke color. Defaults to "#000000".</description>
+			<name>strokeColor</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>SVG stroke opacity. Valid values range from 0.0 to 1.0, inclusive. Defaults to "1.0".</description>
+			<name>strokeOpacity</name>
+			<required>false</required>
+			<type>java.lang.Double</type>
+		</attribute>
+		<attribute>
+			<description>SVG stroke width. Defaults to "1.0".</description>
+			<name>strokeWidth</name>
+			<required>false</required>
+			<type>java.lang.Double</type>
+		</attribute>
+		<attribute>
+			<description>SVG error message if not supported by the browser. Defaults to "SVG not supported.".</description>
+			<name>message</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+	</tag>
+
+</facelet-taglib>
