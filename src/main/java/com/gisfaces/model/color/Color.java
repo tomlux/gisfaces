@@ -31,6 +31,14 @@ public class Color implements Serializable
 	public Color(String hex)
 	{
 		super();
+
+		// Ensure proper hex color string format.
+		if ((hex != null) && (!hex.startsWith("#")))
+		{
+			hex = "#".concat(hex);
+		}
+
+		// Parse the hex color string.
 		java.awt.Color c = java.awt.Color.decode(hex);
 		this.r = c.getRed();
 		this.g = c.getGreen();
