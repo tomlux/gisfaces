@@ -242,4 +242,48 @@
 		</attribute>
 	</tag>
 
+	<tag>
+		<description>Geolocation custom component. See https://dev.w3.org/geo/api/spec-source.html for API details.</description>
+		<tag-name>geolocation</tag-name>
+		<component>
+			<component-type>com.gisfaces.component.GeoLocation</component-type>
+		</component>
+		<attribute>
+			<description>The identifier for this component.</description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description>The rendered indicator for this component.</description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Indicator to receive continuous geolocation events. If "false" a single geolocation event will be received. Valid values are "true" and "false". Defaults to "true".</description>
+			<name>watch</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Indicator which provides a hint that the application would like to receive the best possible results. Valid values are "true" and "false". Defaults to "true".</description>
+			<name>accuracy</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description>Indicates the maximum length of time in milliseconds allowed to pass from the geolocation call until a successful result. Do not set this value too low or timeouts will occur. Defaults to "60000" (60 seconds).</description>
+			<name>timeout</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description>Indicates the maximum age in milliseconds to accept a cached position. If set to 0, immediately attempt to acquire current position. Defaults to "0"</description>
+			<name>maximumAge</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+	</tag>
+
 </facelet-taglib>
