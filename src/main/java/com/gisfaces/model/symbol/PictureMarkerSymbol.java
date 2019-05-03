@@ -26,11 +26,22 @@ public class PictureMarkerSymbol extends MarkerSymbol implements Serializable
 	 */
 	public PictureMarkerSymbol()
 	{
+		this("http://static.arcgis.com/images/Symbols/Shapes/OrangePin2LargeB.png", "24px", "24px");
+	}
+
+	/**
+	 * Constructor.
+	 * @param url Symbol URL.
+	 * @param width Symbol width.
+	 * @param height Symbol height.
+	 */
+	public PictureMarkerSymbol(String url, String width, String height)
+	{
 		super();
 
-		this.url = "http://static.arcgis.com/images/Symbols/Shapes/OrangePin2LargeB.png";
-		this.width = "24px";
-		this.height = "24px";
+		this.url = url;
+		this.width = width;
+		this.height = height;
 	}
 
 	/* (non-Javadoc)
