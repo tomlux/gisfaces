@@ -2,6 +2,8 @@ package com.gisfaces.model.layer;
 
 import java.io.Serializable;
 
+import com.gisfaces.model.renderer.PointCloudRenderer;
+
 /**
  * Point image layer class.
  * @author Chris Duncan (cduncan@gisfaces.com)
@@ -14,6 +16,9 @@ public class PointCloudLayer extends Layer implements Serializable
 
 	/** Layer URL. */
 	private String url;
+
+	/** Symbology renderer. */
+	private PointCloudRenderer renderer;
 
 	/**
 	 * Constructor.
@@ -51,5 +56,23 @@ public class PointCloudLayer extends Layer implements Serializable
 	public void setUrl(String url)
 	{
 		this.url = url;
+	}
+
+	/**
+	 * Method to get the symbology renderer.
+	 * @return
+	 */
+	public PointCloudRenderer getRenderer()
+	{
+		return renderer;
+	}
+
+	/**
+	 * Method to set the symbology renderer.
+	 * @param renderer
+	 */
+	public void setRenderer(PointCloudRenderer renderer)
+	{
+		this.renderer = renderer;
 	}
 }
