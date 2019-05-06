@@ -36,6 +36,9 @@ public class SimpleRenderer implements Renderer, Serializable
 		this.symbol = symbol;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.gisfaces.model.renderer.Renderer#getType()
+	 */
 	@Override
 	public String getType()
 	{
