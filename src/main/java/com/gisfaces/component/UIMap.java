@@ -41,6 +41,7 @@ import com.gisfaces.model.layer.ImageryLayer;
 import com.gisfaces.model.layer.IntegratedMeshLayer;
 import com.gisfaces.model.layer.KMLLayer;
 import com.gisfaces.model.layer.Layer;
+import com.gisfaces.model.layer.LayerType;
 import com.gisfaces.model.layer.MapImageLayer;
 import com.gisfaces.model.layer.PointCloudLayer;
 import com.gisfaces.model.layer.PortalLayer;
@@ -548,7 +549,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			writer.write("com.gisfaces.createAllWidgets();");
 
 			// Encode all map layers.
-			this.encodeMapLayers(context, this, writer);
+			this.encodeMapLayers(context, this, writer, model);
 
 			// Encode the JSF application callback registrations.
 			writer.write("com.gisfaces.addMapBasemapListener(com.gisfaces.generateJsfMapBasemapEvent);");
@@ -590,7 +591,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			}
 
 			// Encode all map layers.
-			this.encodeMapLayers(context, this, writer);
+			this.encodeMapLayers(context, this, writer, model);
 		}
 
 		// Encode the javascript block close.
@@ -602,35 +603,71 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	 * @param context FacesContext
 	 * @param component UIComponent
 	 * @param writer ResponseWriter
+	 * @param model MapModel
 	 * @throws IOException
 	 */
-	private void encodeMapLayers(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
+	private void encodeMapLayers(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
 	{
-		// Get the component model attribute.
-		MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(component, Constants.ATTRIBUTE_MODEL);
+		// Encode map layer removals.
+		this.encodeMapLayerRemovals(context, component, writer, model);
 
+		// Encode map layer inserts and updates.
+		this.encodeMapLayerUpdates(context, component, writer, model);
+	}
+
+	/**
+	 * Method to encode map layer removals.
+	 * @param context FacesContext
+	 * @param component UIComponent
+	 * @param writer ResponseWriter
+	 * @param model MapModel
+	 * @throws IOException
+	 */
+	private void encodeMapLayerRemovals(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
+	{
+		if (model != null)
+		{
+			// Build a list of the currently specified layer IDs.
+			List<String> ids = new ArrayList<String>();
+			if (model.getLayers() != null)
+			{
+				for(Layer layer : model.getLayers())
+				{
+					ids.add(String.format("'%s'", layer.getId()));
+				}
+			}
+
+			// Synchronize the layers for possible removals.
+			writer.write(String.format("com.gisfaces.syncLayers([%s]);", String.join(",", ids)));
+		}
+	}
+
+	/**
+	 * Method to encode map layer inserts and updates.
+	 * @param context FacesContext
+	 * @param component UIComponent
+	 * @param writer ResponseWriter
+	 * @param model MapModel
+	 * @throws IOException
+	 */
+	private void encodeMapLayerUpdates(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
+	{
 		if ((model != null) && (model.getLayers() != null))
 		{
 			// Process all defined layers.
 			List<Layer> layers = model.getLayers();
-			for (Layer layer : layers)
+			for (int i=0; i<layers.size(); i++)
 			{
+				// Get the layer.
+				Layer layer = layers.get(i);
+
 				if (layer instanceof CSVLayer)
 				{
 					// Build a JSON object from the layer.
 					JSONObject jo = new JSONObject((CSVLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addCSVLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.CSV.toString(), jo, i, false));
 				}
 				else if (layer instanceof FeatureLayer)
 				{
@@ -638,16 +675,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((FeatureLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addFeatureLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.FEATURE.toString(), jo, i, false));
 				}
 				else if (layer instanceof GeoJSONLayer)
 				{
@@ -655,16 +683,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((GeoJSONLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addGeoJSONLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEOJSON.toString(), jo, i, false));
 				}
 				else if (layer instanceof GeoRSSLayer)
 				{
@@ -672,23 +691,14 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((GeoRSSLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addGeoRSSLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEO_RSS.toString(), jo, i, false));
 				}
 				else if (layer instanceof GraphicsLayer)
 				{
 					if (!context.isPostback())
 					{
 						// Add new layer.
-						writer.write(String.format("com.gisfaces.addGraphicsLayer('%s', '%s');", layer.getId(), layer.getTitle()));
+						writer.write(String.format("com.gisfaces.addGraphicsLayer('%s', '%s', %s);", layer.getId(), layer.getTitle(), i));
 
 						// Enable sketch widget.
 						if (((GraphicsLayer) layer).isEditable())
@@ -719,16 +729,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((ImageryLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addImageryLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.IMAGERY.toString(), jo, i, false));
 				}
 				else if (layer instanceof IntegratedMeshLayer)
 				{
@@ -736,16 +737,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((IntegratedMeshLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addIntegratedMeshLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.INTEGRATED_MESH.toString(), jo, i, false));
 				}
 				else if (layer instanceof KMLLayer)
 				{
@@ -753,16 +745,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((KMLLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addKMLLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.KML.toString(), jo, i, false));
 				}
 				else if (layer instanceof MapImageLayer)
 				{
@@ -776,16 +759,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						jo.remove("sublayers");
 					}
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addMapImageLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.MAP_IMAGE.toString(), jo, i, false));
 				}
 				else if (layer instanceof PointCloudLayer)
 				{
@@ -796,16 +770,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					// Opacity is not supported on point cloud layers.
 					jo.remove("opacity");
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addPointCloudLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.POINT_CLOUD.toString(), jo, i, false));
 				}
 				else if (layer instanceof PortalLayer)
 				{
@@ -813,16 +778,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((PortalLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addPortalLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.PORTAL.toString(), jo, i, false));
 				}
 				else if (layer instanceof SceneLayer)
 				{
@@ -830,16 +786,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((SceneLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addSceneLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.SCENE.toString(), jo, i, false));
 				}
 				else if (layer instanceof StreamLayer)
 				{
@@ -847,16 +794,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((StreamLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addStreamLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.STREAM.toString(), jo, i, false));
 				}
 				else if (layer instanceof TileLayer)
 				{
@@ -864,16 +802,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((TileLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addTileLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.TILE.toString(), jo, i, false));
 				}
 				else if (layer instanceof VectorTileLayer)
 				{
@@ -881,16 +810,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((VectorTileLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addVectorTileLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.VECTOR_TILE.toString(), jo, i, false));
 				}
 				else if (layer instanceof WMSLayer)
 				{
@@ -898,16 +818,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((WMSLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addWMSLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.WMS.toString(), jo, i, false));
 				}
 				else if (layer instanceof WMTSLayer)
 				{
@@ -915,16 +826,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					JSONObject jo = new JSONObject((WMTSLayer)layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (context.isPostback())
-					{
-						// Update existing layer.
-						writer.write(String.format("com.gisfaces.updateLayer(%s);", jo));
-					}
-					else
-					{
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addWMTSLayer(%s);", jo));
-					}
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.WMTS.toString(), jo, i, false));
 				}
 			}
 		}

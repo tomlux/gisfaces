@@ -868,10 +868,312 @@ require([
 	}
 
 	/**
+	 * Function to process a new or existing layer.
+	 * @param type Layer type.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 * @param reset Hard reset indicator since some layer properties cannot be easily updated.
+	 */
+	com.gisfaces.processLayer = function(type, properties, index, reset) {
+		console.log("Processing layer of type '%s' with properties '%s' at index '%s'.", type, JSON.stringify(properties), index);
+
+		if (reset) {
+			// Remove the layer for hard reset.
+			com.gisfaces.removeLayer(properties.id);
+		}
+
+		// Get the layer.
+		var layer = com.gisfaces.findLayer(properties.id);
+
+		if (layer) {
+			// Update an existing layer.
+			com.gisfaces.updateLayer(layer, properties, index);
+		} else {
+			// Add a new layer.
+			com.gisfaces.addLayer(type, properties, index);
+		}
+	}
+
+	/**
+	 * Function to add a new layer.
+	 * @param type Layer type.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addLayer = function(type, properties, index) {
+		console.log("Adding layer of type '%s' at index '%s'.", type, index);
+
+		switch (type) {
+			case "csv":
+				com.gisfaces.addCSVLayer(properties, index);
+				break;
+			case "feature":
+				com.gisfaces.addFeatureLayer(properties, index);
+				break;
+			case "geojson":
+				com.gisfaces.addGeoJSONLayer(properties, index);
+				break;
+			case "geo-rss":
+				com.gisfaces.addGeoRSSLayer(properties, index);
+				break;
+			case "graphics":
+				break;
+			case "imagery":
+				com.gisfaces.addImageryLayer(properties, index);
+				break;
+			case "integrated-mesh":
+				com.gisfaces.addIntegratedMeshLayer(properties, index);
+				break;
+			case "kml":
+				com.gisfaces.addKMLLayer(properties, index);
+				break;
+			case "map-image":
+				com.gisfaces.addMapImageLayer(properties, index);
+				break;
+			case "point-cloud":
+				com.gisfaces.addPointCloudLayer(properties, index);
+				break;
+			case "portal":
+				com.gisfaces.addPortalLayer(properties, index);
+				break;
+			case "scene":
+				com.gisfaces.addSceneLayer(properties, index);
+				break;
+			case "stream":
+				com.gisfaces.addStreamLayer(properties, index);
+				break;
+			case "tile":
+				com.gisfaces.addTileLayer(properties, index);
+				break;
+			case "vector-tile":
+				com.gisfaces.addVectorTileLayer(properties, index);
+				break;
+			case "wms":
+				com.gisfaces.addWMSLayer(properties, index);
+				break;
+			case "wmts":
+				com.gisfaces.addWMTSLayer(properties, index);
+				break;
+		}
+	}
+
+	/**
+	 * Function to create and add a new ArcGIS Server layer.
+	 * Layer types include FeatureLayer, TileLayer, MapImageLayer, SceneLayer, StreamLayer, ElevationLayer or GroupLayer.
+	 * @param layerId Layer ID used for later reference.
+	 * @param layerUrl ArcGIS Server layer URL.
+	 * @param layerProperties Layer properties.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addArcGisServerLayer = function(layerId, layerUrl, layerProperties, index) {
+		console.log("Adding ArcGIS Server layer with id '%s', url '%s', and properties '%s'.", layerId, layerUrl, JSON.stringify(layerProperties));
+
+		// Verify layer properties exists.
+		if (!layerProperties) {
+			layerProperties.id = {};
+		}
+
+		// Set the layer ID.
+		layerProperties.id = layerId
+
+		// Create a new ArcGIS Server layer.
+		Layer.fromArcGISServerUrl({
+			url: layerUrl,
+			properties: layerProperties
+		}).then(function(layer) {
+			// Add the new layer to the map.
+			com.gisfaces.map.add(layer, index);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+	}
+
+	/**
+	 * Function to create and add a new CSV layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addCSVLayer = function(properties, index) {
+		console.log("Adding CSV layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new CSVLayer(properties);
+
+		layer.when(function() {
+			console.log("CSV layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new feature layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addFeatureLayer = function(properties, index) {
+		console.log("Adding feature layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new FeatureLayer(properties);
+
+		layer.when(function() {
+			console.log("Feature layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				console.log("Setting default popup template for feature layer '%s'.", layer.id);
+				layer.popupTemplate = { title: layer.title, content: "{*}" };
+			}
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new GeoJSON layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addGeoJSONLayer = function(properties, index) {
+		console.log("Adding GeoJSON layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new GeoJSONLayer(properties);
+
+		layer.when(function() {
+			console.log("GeoJSON layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new GeoRSS layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addGeoRSSLayer = function(properties, index) {
+		console.log("Adding GeoRSS layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new GeoRSSLayer(properties);
+
+		layer.when(function() {
+			console.log("GeoRSS layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new graphics layer.
+	 * @param layerId Layer ID used for later reference.
+	 * @param title Layer title displayed in Legend and LayerList widgets.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addGraphicsLayer = function(layerId, title, index) {
+		console.log("Adding graphics layer with id '%s' and title '%s'.", layerId, title);
+
+		// Create a new graphics layer.
+		var layer = new GraphicsLayer({
+			id: layerId,
+			title: title
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new imagery layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addImageryLayer = function(properties, index) {
+		console.log("Adding imagery layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new ImageryLayer(properties);
+
+		layer.when(function() {
+			console.log("Imagery layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new integrated mesh layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addIntegratedMeshLayer = function(properties, index) {
+		console.log("Adding integrated mesh layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new IntegratedMeshLayer(properties);
+
+		layer.when(function() {
+			console.log("Integrated mesh layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
+	 * Function to create and add a new KML layer.
+	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
+	 */
+	com.gisfaces.addKMLLayer = function(properties, index) {
+		console.log("Adding KML layer with properties '%s'.", JSON.stringify(properties));
+
+		// Create the new layer.
+		var layer = new KMLLayer(properties);
+
+		layer.when(function() {
+			console.log("KML layer '%s' loaded.", layer.id);
+		}, function(e) {
+			// Error loading layer.
+			console.error(e);
+		});
+
+		// Add the new layer to the map.
+		com.gisfaces.map.add(layer, index);
+	}
+
+	/**
 	 * Function to create and add a new map image layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addMapImageLayer = function(properties) {
+	com.gisfaces.addMapImageLayer = function(properties, index) {
 		console.log("Adding map image layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create a new map image layer.
@@ -893,216 +1195,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new ArcGIS Server layer.
-	 * Layer types include FeatureLayer, TileLayer, MapImageLayer, SceneLayer, StreamLayer, ElevationLayer or GroupLayer.
-	 * @param layerId Layer ID used for later reference.
-	 * @param layerUrl ArcGIS Server layer URL.
-	 * @param layerProperties Layer properties.
-	 */
-	com.gisfaces.addArcGisServerLayer = function(layerId, layerUrl, layerProperties) {
-		console.log("Adding ArcGIS Server layer with id '%s', url '%s', and properties '%s'.", layerId, layerUrl, JSON.stringify(layerProperties));
-
-		// Verify layer properties exists.
-		if (!layerProperties) {
-			layerProperties.id = {};
-		}
-
-		// Set the layer ID.
-		layerProperties.id = layerId
-
-		// Create a new ArcGIS Server layer.
-		Layer.fromArcGISServerUrl({
-			url: layerUrl,
-			properties: layerProperties
-		}).then(function(layer) {
-			// Add the new layer to the map.
-			com.gisfaces.map.add(layer);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-	}
-
-	/**
-	 * Function to create and add a new CSV layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addCSVLayer = function(properties) {
-		console.log("Adding CSV layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new CSVLayer(properties);
-
-		layer.when(function() {
-			console.log("CSV layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new feature layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addFeatureLayer = function(properties) {
-		console.log("Adding feature layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new FeatureLayer(properties);
-
-		layer.when(function() {
-			console.log("Feature layer '%s' loaded.", layer.id);
-
-			if (!properties.popupTemplate) {
-				// Set the default popup template.
-				console.log("Setting default popup template for feature layer '%s'.", layer.id);
-				layer.popupTemplate = { title: layer.title, content: "{*}" };
-			}
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new GeoJSON layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addGeoJSONLayer = function(properties) {
-		console.log("Adding GeoJSON layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new GeoJSONLayer(properties);
-
-		layer.when(function() {
-			console.log("GeoJSON layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new GeoRSS layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addGeoRSSLayer = function(properties) {
-		console.log("Adding GeoRSS layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new GeoRSSLayer(properties);
-
-		layer.when(function() {
-			console.log("GeoRSS layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new graphics layer.
-	 * @param layerId Layer ID used for later reference.
-	 * @param title Layer title displayed in Legend and LayerList widgets.
-	 */
-	com.gisfaces.addGraphicsLayer = function(layerId, title) {
-		console.log("Adding graphics layer with id '%s' and title '%s'.", layerId, title);
-
-		// Create a new graphics layer.
-		var layer = new GraphicsLayer({
-			id: layerId,
-			title: title
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new imagery layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addImageryLayer = function(properties) {
-		console.log("Adding imagery layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new ImageryLayer(properties);
-
-		layer.when(function() {
-			console.log("Imagery layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new integrated mesh layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addIntegratedMeshLayer = function(properties) {
-		console.log("Adding integrated mesh layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new IntegratedMeshLayer(properties);
-
-		layer.when(function() {
-			console.log("Integrated mesh layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
-	}
-
-	/**
-	 * Function to create and add a new KML layer.
-	 * @param properties JSON properties defining layer.
-	 */
-	com.gisfaces.addKMLLayer = function(properties) {
-		console.log("Adding KML layer with properties '%s'.", JSON.stringify(properties));
-
-		// Create the new layer.
-		var layer = new KMLLayer(properties);
-
-		layer.when(function() {
-			console.log("KML layer '%s' loaded.", layer.id);
-		}, function(e) {
-			// Error loading layer.
-			console.error(e);
-		});
-
-		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new point cloud layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addPointCloudLayer = function(properties) {
+	com.gisfaces.addPointCloudLayer = function(properties, index) {
 		console.log("Adding point cloud layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1116,20 +1217,21 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new portal layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addPortalLayer = function(properties) {
+	com.gisfaces.addPortalLayer = function(properties, index) {
 		console.log("Adding portal layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
 		Layer.fromPortalItem(properties).then(function(layer) {
 			// Add the new layer to the map.
-			com.gisfaces.map.add(layer);
+			com.gisfaces.map.add(layer, index);
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1139,8 +1241,9 @@ require([
 	/**
 	 * Function to create and add a new scene layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addSceneLayer = function(properties) {
+	com.gisfaces.addSceneLayer = function(properties, index) {
 		console.log("Adding scene layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1154,14 +1257,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new stream layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addStreamLayer = function(properties) {
+	com.gisfaces.addStreamLayer = function(properties, index) {
 		console.log("Adding stream layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1175,14 +1279,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new tile layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addTileLayer = function(properties) {
+	com.gisfaces.addTileLayer = function(properties, index) {
 		console.log("Adding tile layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1196,14 +1301,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new vector tile layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addVectorTileLayer = function(properties) {
+	com.gisfaces.addVectorTileLayer = function(properties, index) {
 		console.log("Adding vector tile layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1217,14 +1323,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new WMS layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addWMSLayer = function(properties) {
+	com.gisfaces.addWMSLayer = function(properties, index) {
 		console.log("Adding WMS layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1238,14 +1345,15 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to create and add a new WMTS layer.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.addWMTSLayer = function(properties) {
+	com.gisfaces.addWMTSLayer = function(properties, index) {
 		console.log("Adding WMTS layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create the new layer.
@@ -1259,28 +1367,85 @@ require([
 		});
 
 		// Add the new layer to the map.
-		com.gisfaces.map.add(layer);
+		com.gisfaces.map.add(layer, index);
 	}
 
 	/**
 	 * Function to update an existing layer.
+	 * @param layer Layer object.
 	 * @param properties JSON properties defining layer.
+	 * @param index Layer index.
 	 */
-	com.gisfaces.updateLayer = function(properties) {
+	com.gisfaces.updateLayer = function(layer, properties, index) {
 		console.log("Updating layer with properties '%s'.", JSON.stringify(properties));
 
-		if (properties && properties.id) {
-			// Get the layer.
-			var layer = com.gisfaces.findLayer(properties.id);
+		if (layer && properties && properties.id) {
+			// Update all properties.
+			for (var key in properties) {
+				console.log("Updating layer '%s' property '%s' value '%s'.", properties.id, key, JSON.stringify(properties[key]));
+				layer.set(key, properties[key]);
+			}
 
-			if (layer) {
-				// Update all properties.
-				for (var key in properties) {
-					console.log("Updating layer '%s' property '%s' value '%s'.", properties.id, key, JSON.stringify(properties[key]));
-					layer.set(key, properties[key]);
-				}
+			// Set the layer index for possible reorder.
+			if (index) {
+				console.log("Reordering layer '%s' to index '%s'.", properties.id, index);
+				com.gisfaces.map.reorder(layer, index);
 			}
 		}
+	}
+
+	/**
+	 * Function to find a layer by ID.
+	 * @param layerId Layer ID.
+	 */
+	com.gisfaces.findLayer = function(layerId) {
+		console.log("Finding map layer with id '%s'.", layerId);
+		return com.gisfaces.map.findLayerById(layerId);
+	}
+
+	/**
+	 * Function to remove a layer by ID.
+	 * @param layerId Layer ID.
+	 */
+	com.gisfaces.removeLayer = function(layerId) {
+		console.log("Removing map layer with id '%s'.", layerId);
+
+		// Get the layer.
+		var layer = com.gisfaces.findLayer(layerId);
+		if (layer) {
+			// Remove the layer from the map.
+			com.gisfaces.map.remove(layer);
+		}
+	}
+
+	/**
+	 * Function to synchronize the requested layer IDs with the current map layer IDs.
+	 * @param requestedLayerIds Array of requested layer IDs.
+	 */
+	com.gisfaces.syncLayers = function(requestedLayerIds) {
+		console.log("Synchronizing requested map layers '%s' with current map layers.", requestedLayerIds);
+
+		// Build an array of the current map layer IDs.
+		var currentLayerIds = [];
+		com.gisfaces.map.layers.forEach(function(layer) {
+			currentLayerIds.push(layer.id);
+		});
+
+		// Remove all of the requested layer IDs from the current IDs.
+		requestedLayerIds.forEach(function(requestedLayerId) {
+			// Find the requested ID in the current ID array.
+			var index = currentLayerIds.indexOf(requestedLayerId);
+			if (index >= 0) {
+				// Remove the requested ID from the current ID array.
+				currentLayerIds.splice(index, 1);
+			}
+		});
+
+		// Remove the layers currently in the map that are not requested.
+		console.log("Removing current map layers '%s' no longer requested.", currentLayerIds);
+		currentLayerIds.forEach(function(id) {
+			com.gisfaces.removeLayer(id);
+		});
 	}
 
 	/**
@@ -1302,30 +1467,6 @@ require([
 				return layer.portalItem.id;
 			});
 		});
-	}
-
-	/**
-	 * Function to find a layer by ID.
-	 * @param layerId
-	 */
-	com.gisfaces.findLayer = function(layerId) {
-		console.log("Finding map layer with id '%s'.", layerId);
-		return com.gisfaces.map.findLayerById(layerId);
-	}
-
-	/**
-	 * Function to remove a layer by ID.
-	 * @param layerId
-	 */
-	com.gisfaces.removeLayer = function(layerId) {
-		console.log("Removing map layer with id '%s'.", layerId);
-
-		// Get the layer.
-		var layer = com.gisfaces.findLayer(layerId);
-		if (layer) {
-			// Remove the layer from the map.
-			com.gisfaces.map.remove(layer);
-		}
 	}
 
 	/**
