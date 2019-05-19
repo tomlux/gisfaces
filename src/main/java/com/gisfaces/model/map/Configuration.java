@@ -2,6 +2,8 @@ package com.gisfaces.model.map;
 
 import java.io.Serializable;
 
+import com.gisfaces.component.Constants;
+
 /**
  * Map configuration class.
  * @author Chris Duncan (cduncan@gisfaces.com)
@@ -10,6 +12,9 @@ public class Configuration implements Serializable
 {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 4106942894342098444L;
+
+	/** Esri JavaScript API URL. */
+	private String jsApiUrl = Constants.DEFAULT_JSAPI;
 
 	/** Local geometry service URL. */
 	private String geometryServiceUrl;
@@ -35,6 +40,24 @@ public class Configuration implements Serializable
 	public Configuration()
 	{
 		super();
+	}
+
+	/**
+	 * Method to get the ESRI JavaScript API URL.
+	 * @return
+	 */
+	public String getJsApiUrl()
+	{
+		return jsApiUrl;
+	}
+
+	/**
+	 * Method to set the ESRI JavaScript API URL.
+	 * @param jsApiUrl
+	 */
+	public void setJsApiUrl(String jsApiUrl)
+	{
+		this.jsApiUrl = jsApiUrl;
 	}
 
 	/**

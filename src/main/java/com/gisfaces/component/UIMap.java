@@ -148,8 +148,12 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						b = Basemap.STREETS;
 					}
 
-					// Set the new values in the managed bean, if specified by a value expression.
-					ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_BASEMAP, b.getValue());
+					// Set the new values in the managed bean.
+					MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+					if (model != null)
+					{
+						model.setBasemap(b);
+					}
 
 					// Send an event to all registered listeners.
 					for (ClientBehavior behavior : behaviors)
@@ -199,10 +203,14 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 				String xmax = params.get("gisfaces.extent.xmax");
 				String ymax = params.get("gisfaces.extent.ymax");
 
-				// Set the new values in the managed bean, if specified by a value expression.
-				ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_LATITUDE, Double.parseDouble(latitude));
-				ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_LONGITUDE, Double.parseDouble(longitude));
-				ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_ZOOM, Double.parseDouble(zoom));
+				// Set the new values in the managed bean.
+				MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+				if (model != null)
+				{
+					model.getViewpoint().setLatitude(Double.parseDouble(latitude));
+					model.getViewpoint().setLongitude(Double.parseDouble(longitude));
+					model.getViewpoint().setZoom(Double.parseDouble(zoom));
+				}
 
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.EXTENT.toString());
@@ -274,9 +282,13 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 				String heading = params.get("gisfaces.heading");
 				String speed = params.get("gisfaces.speed");
 
-				// Set the new values in the managed bean, if specified by a value expression.
-				ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_LATITUDE, Double.parseDouble(latitude));
-				ComponentUtilities.setValueExpressionValue(context, this, Constants.ATTRIBUTE_LONGITUDE, Double.parseDouble(longitude));
+				// Set the new values in the managed bean.
+				MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+				if (model != null)
+				{
+					model.getViewpoint().setLatitude(Double.parseDouble(latitude));
+					model.getViewpoint().setLongitude(Double.parseDouble(longitude));
+				}
 
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GEOLOCATION.toString());
@@ -414,18 +426,17 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	public void encodeBegin(FacesContext context) throws IOException
 	{
 		// Get the component attributes.
-		String jsapi		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_JSAPI, Constants.DEFAULT_JSAPI);
-		String theme		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_THEME, Constants.DEFAULT_THEME);
-		String type			= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_TYPE, Constants.DEFAULT_TYPE);
-		String panel		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_MAP_PANEL);
-		String webmap		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_WEBMAP);
-		String basemap		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_BASEMAP, Constants.DEFAULT_BASEMAP);
-		String latitude		= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_LATITUDE, Double.toString(Constants.DEFAULT_LATITUDE));
-		String longitude	= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_LONGITUDE, Double.toString(Constants.DEFAULT_LONGITUDE));
-		String zoom			= ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_ZOOM, Double.toString(Constants.DEFAULT_ZOOM));
-		MapModel model		= (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+		String panel = ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_PANEL);
+		MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
 
-		boolean is3d = MapType.THREE_D.getValue().equalsIgnoreCase(type);
+		// Set a default map model if not explicitly defined.
+		if (model == null)
+		{
+			model = new MapModel();
+		}
+
+		// 3D indicator.
+		boolean is3d = MapType.THREE_D.equals(model.getMapType());
 
 		// Get the component client ID.
 		String clientId = this.getClientId();
@@ -444,8 +455,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 		if (!context.isPostback())
 		{
 			// Encode ESRI JSAPI resources.
-			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s/esri/themes/%s/main.css'></link>", jsapi, theme));
-			writer.write(String.format("<script type='text/javascript' src='%s'></script>", jsapi));
+			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s/esri/themes/%s/main.css'></link>", model.getConfiguration().getJsApiUrl(), model.getMapTheme().getValue()));
+			writer.write(String.format("<script type='text/javascript' src='%s'></script>", model.getConfiguration().getJsApiUrl()));
 
 			// Encode the GISFaces resources.
 			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s'></link>", ComponentUtilities.getResource(context, "css", "gisfaces.css").getRequestPath()));
@@ -513,10 +524,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			writer.write(String.format("com.gisfaces.clientId = '%s';", clientId));
 
 			// Encode the map.
-			if (webmap != null)
+			if (model.getWebMapPortalItemId() != null)
 			{
 				// Encode the web map portal item.
-				writer.write(String.format("com.gisfaces.createWebMap('%s');", webmap));
+				writer.write(String.format("com.gisfaces.createWebMap('%s');", model.getWebMapPortalItemId()));
 			}
 			else
 			{
@@ -524,12 +535,12 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 				{
 					// Encode the map.
 					// 3d map ground layer "world-topobathymetry" uses "world-elevation" for land and includes oceans.
-					writer.write(String.format("com.gisfaces.createMap('%s', 'world-topobathymetry');", basemap));
+					writer.write(String.format("com.gisfaces.createMap('%s', 'world-topobathymetry');", model.getBasemap().getValue()));
 				}
 				else
 				{
 					// Encode the 2d map.
-					writer.write(String.format("com.gisfaces.createMap('%s', null);", basemap));
+					writer.write(String.format("com.gisfaces.createMap('%s', null);", model.getBasemap().getValue()));
 				}
 			}
 
@@ -537,12 +548,12 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			if (is3d)
 			{
 				// Encode a 3d scene view.
-				writer.write(String.format("com.gisfaces.createSceneView('%s', %s, %s, %s);", panel, latitude, longitude, zoom));
+				writer.write(String.format("com.gisfaces.createSceneView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
 			}
 			else
 			{
 				// Encode a 2d map view.
-				writer.write(String.format("com.gisfaces.createMapView('%s', %s, %s, %s);", panel, latitude, longitude, zoom));
+				writer.write(String.format("com.gisfaces.createMapView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
 			}
 
 			// Encode all map widgets.
@@ -578,17 +589,11 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 		}
 		else
 		{
-			// Update the map extent, if specified as a value expression.
-			if (ComponentUtilities.isValueExpression(this, Constants.ATTRIBUTE_LATITUDE) && ComponentUtilities.isValueExpression(this, Constants.ATTRIBUTE_LONGITUDE) && ComponentUtilities.isValueExpression(this, Constants.ATTRIBUTE_ZOOM))
-			{
-				writer.write(String.format("com.gisfaces.zoomToCoordinate(%s, %s, %s);", latitude, longitude, zoom));
-			}
+			// Update the map extent.
+			writer.write(String.format("com.gisfaces.zoomToCoordinate(%s, %s, %s);", model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
 
-			// Update the map basemap layer, if specified as a value expression.
-			if (ComponentUtilities.isValueExpression(this, Constants.ATTRIBUTE_BASEMAP))
-			{
-				writer.write(String.format("com.gisfaces.setMapBasemap('%s');", basemap));
-			}
+			// Update the map basemap layer.
+			writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getValue()));
 
 			// Encode all map layers.
 			this.encodeMapLayers(context, this, writer, model);
