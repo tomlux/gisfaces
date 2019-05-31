@@ -56,23 +56,26 @@ public class JSONVisitor
 			// Get the json keys.
 			String[] keys = JSONObject.getNames(jo);
 
-			for (String key : keys)
+			if (keys != null)
 			{
-				// Get the json key object.
-				Object obj = jo.get(key);
+				for (String key : keys)
+				{
+					// Get the json key object.
+					Object obj = jo.get(key);
 
-				if (obj instanceof JSONObject)
-				{
-					this.visit(filter, (JSONObject) obj);
-				}
-				else if (obj instanceof JSONArray)
-				{
-					this.visit(filter, (JSONArray) obj);
-				}
-				else
-				{
-					// Invoke the visitor filter.
-					filter.accept(jo, key);
+					if (obj instanceof JSONObject)
+					{
+						this.visit(filter, (JSONObject) obj);
+					}
+					else if (obj instanceof JSONArray)
+					{
+						this.visit(filter, (JSONArray) obj);
+					}
+					else
+					{
+						// Invoke the visitor filter.
+						filter.accept(jo, key);
+					}
 				}
 			}
 		}
@@ -86,19 +89,22 @@ public class JSONVisitor
 	 */
 	private void visit(Filter filter, JSONArray ja) throws JSONException
 	{
-		// Process all array entries.
-		for (int i=0; i<ja.length(); i++)
+		if (ja != null)
 		{
-			// Get the json array object.
-			Object obj = ja.get(i);
+			// Process all array entries.
+			for (int i=0; i<ja.length(); i++)
+			{
+				// Get the json array object.
+				Object obj = ja.get(i);
 
-			if (obj instanceof JSONObject)
-			{
-				this.visit(filter, (JSONObject) obj);
-			}
-			else if (obj instanceof JSONArray)
-			{
-				this.visit(filter, (JSONArray) obj); 
+				if (obj instanceof JSONObject)
+				{
+					this.visit(filter, (JSONObject) obj);
+				}
+				else if (obj instanceof JSONArray)
+				{
+					this.visit(filter, (JSONArray) obj); 
+				}
 			}
 		}
 	}
