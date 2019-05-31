@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.gisfaces.model.map.PopupTemplate;
 import com.gisfaces.model.renderer.Renderer;
+import com.gisfaces.model.symbol.LabelClass;
 
 /**
  * Sub layer class.
@@ -17,6 +18,12 @@ public class SubLayer extends ScaledLayer implements Serializable
 
 	/** Layer definition expression. */
 	private String definitionExpression;
+
+	/** Labeling information. */
+	private LabelClass[] labelingInfo;
+
+	/** Label visibility. */
+	private Boolean labelsVisible;
 
 	/** Popup enabled indicator. */
 	private boolean popupEnabled = true;
@@ -61,6 +68,42 @@ public class SubLayer extends ScaledLayer implements Serializable
 	public void setDefinitionExpression(String definitionExpression)
 	{
 		this.definitionExpression = definitionExpression;
+	}
+
+	/**
+	 * Method to get the labeling information.
+	 * @return
+	 */
+	public LabelClass[] getLabelingInfo()
+	{
+		return labelingInfo;
+	}
+
+	/**
+	 * Method to set the labeling information.
+	 * @param labelingInfo
+	 */
+	public void setLabelingInfo(LabelClass[] labelingInfo)
+	{
+		this.labelingInfo = labelingInfo;
+	}
+
+	/**
+	 * Method to get the label visibility.
+	 * @return
+	 */
+	public Boolean getLabelsVisible()
+	{
+		return labelsVisible;
+	}
+
+	/**
+	 * Method to set the label visibility.
+	 * @param labelsVisible
+	 */
+	public void setLabelsVisible(Boolean labelsVisible)
+	{
+		this.labelsVisible = labelsVisible;
 	}
 
 	/**
