@@ -12,11 +12,14 @@ public class Point implements Geometry, Serializable
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 8606961765098525165L;
 
-	/** Latitude. */
-	private double latitude;
+	/** Latitude [-90, 90]. */
+	private Double latitude;
 
-	/** Longitude. */
-	private double longitude;
+	/** Longitude [-180, 180]. */
+	private Double longitude;
+
+	/** Altitude in meters. */
+	private Double z;
 
 	/**
 	 * Constructor.
@@ -28,15 +31,30 @@ public class Point implements Geometry, Serializable
 
 	/**
 	 * Constructor.
-	 * @param latitude
-	 * @param longitude
+	 * @param latitude Latitude [-90, 90].
+	 * @param longitude Longitude [-180, 180].
 	 */
-	public Point(double latitude, double longitude)
+	public Point(Double latitude, Double longitude)
 	{
 		super();
 
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+
+	/**
+	 * Constructor.
+	 * @param latitude Latitude [-90, 90].
+	 * @param longitude Longitude [-180, 180].
+	 * @param altitude Altitude in meters.
+	 */
+	public Point(Double latitude, Double longitude, Double altitude)
+	{
+		super();
+
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.z = altitude;
 	}
 
 	/* (non-Javadoc)
@@ -50,9 +68,9 @@ public class Point implements Geometry, Serializable
 
 	/**
 	 * Method to get the latitude.
-	 * @return double
+	 * @return Double
 	 */
-	public double getLatitude()
+	public Double getLatitude()
 	{
 		return latitude;
 	}
@@ -61,16 +79,16 @@ public class Point implements Geometry, Serializable
 	 * Method to set the latitude.
 	 * @param latitude
 	 */
-	public void setLatitude(double latitude)
+	public void setLatitude(Double latitude)
 	{
 		this.latitude = latitude;
 	}
 
 	/**
 	 * Method to get the longitude.
-	 * @return double
+	 * @return Double
 	 */
-	public double getLongitude()
+	public Double getLongitude()
 	{
 		return longitude;
 	}
@@ -79,9 +97,27 @@ public class Point implements Geometry, Serializable
 	 * Method to set the longitude.
 	 * @param longitude
 	 */
-	public void setLongitude(double longitude)
+	public void setLongitude(Double longitude)
 	{
 		this.longitude = longitude;
+	}
+
+	/**
+	 * Method to get the altitude in meters.
+	 * @return
+	 */
+	public Double getZ()
+	{
+		return z;
+	}
+
+	/**
+	 * Method to set the altitude in meters.
+	 * @param z
+	 */
+	public void setZ(Double z)
+	{
+		this.z = z;
 	}
 
 	/**
@@ -90,7 +126,7 @@ public class Point implements Geometry, Serializable
 	 */
 	public boolean isValid()
 	{
-		return ((this.latitude <= 90) && (this.latitude >= -90) && (this.longitude <= 180) && (this.longitude >= -180));
+		return ((this.latitude != null) && (this.latitude <= 90) && (this.latitude >= -90) && (this.longitude != null) && (this.longitude <= 180) && (this.longitude >= -180));
 	}
 
 	/* (non-Javadoc)
