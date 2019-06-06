@@ -119,29 +119,48 @@ public class GISUtilities
 	}
 
 	/**
-	 * Method to format the specified coordinates for use with JavaScript methods.
-	 * @param coordinates List of Coordinate objects.
-	 * @return Coordinates in "[[long,lat],...]" format.
+	 * Method to format the specified points for use with JavaScript methods.
+	 * @param points List of Point objects.
+	 * @return Coordinates in "[[longitude,latitude],...]" format.
 	 */
-	public static final String formatCoordinates(List<Point> coordinates)
+	public static final String formatPoints(List<Point> points)
 	{
 		StringBuffer sb = new StringBuffer();
 
-		if ((coordinates != null) && (!coordinates.isEmpty()))
+		if ((points != null) && (!points.isEmpty()))
 		{
-			for (Point c : coordinates)
+			for (Point p : points)
 			{
 				if (sb.length() > 0)
 				{
 					sb.append(",");
 				}
 
-				sb.append("[").append(c.getLongitude()).append(",").append(c.getLatitude()).append("]");
+				sb.append("[").append(p.getLongitude()).append(",").append(p.getLatitude()).append("]");
 			}
 		}
 
 		sb.insert(0, "[").append("]");
 
 		return sb.toString();
+	}
+
+	/**
+	 * Method to calculate the scale for the specified LOD zoom level.
+	 * @param lod Level Of Detail zoom level.
+	 * @return Scale.
+	 */
+	public static final double calculateScale(int lod)
+	{
+		// Base ESRI tiled background layer scale.
+		double scale = 591657527.591555;
+
+		for (int i=0; i<lod; i++)
+		{
+			// Reduce scale by half for each LOD zoom level requested.
+			scale /= 2;
+		}
+
+		return scale;
 	}
 }

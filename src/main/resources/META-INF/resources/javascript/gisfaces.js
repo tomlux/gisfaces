@@ -1941,6 +1941,39 @@ require([
 	}
 
 	/**
+	 * Function to generate LOD levels based on the ESRI tiled background layers.
+	 * @param levels Maximum LOD level. Values 0-24 are the defaults for most ESRI background layers. 
+	 * @returns Array of LOD level information.
+	 */
+	com.gisfaces.generateLodLevels = function(levels) {
+		console.log("Begin generating '%s' LOD levels.", levels);
+
+		var lods = [];
+
+		// Start with the first ESRI tiled background layer's scale and resolution.
+		var scale = 591657527.591555;
+		var resolution = 156543.03392800014;
+
+		for (var i=0; i<levels; i++) {
+			var lod = {};
+			lod.level = i;
+			lod.scale = scale;
+			lod.resolution = resolution;
+			console.log("LOD level='%s', scale='%s', resolution='%s'.", lod.level, lod.scale, lod.resolution);
+
+			lods.push(lod);
+
+			// Reduce scale and resolution by half for each LOD.
+			scale /= 2;
+			resolution /= 2;
+		}
+
+		console.log("End generating LOD levels.");
+
+		return lods;
+	}
+
+	/**
 	 * Function to convert geometry from web mercator units to geographic units.
 	 * @param geometry Geometry.
 	 */
@@ -1996,7 +2029,7 @@ require([
 
 	/**
 	 * Function to detect browser WebGL support level.
-	 * @ return -1 if not supported, 0 if supported but not enabled, 1 if enabled.
+	 * @returns -1 if not supported, 0 if supported but not enabled, 1 if enabled.
 	 */
 	com.gisfaces.getWebGLSupportLevel = function() {
 		console.log("Detecting browser WebGL support level.");
