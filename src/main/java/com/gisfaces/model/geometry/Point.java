@@ -21,6 +21,9 @@ public class Point implements Geometry, Serializable
 	/** Altitude in meters. */
 	private Double z;
 
+	/** Spatial reference. */
+	private SpatialReference spatialReference;
+
 	/**
 	 * Constructor.
 	 */
@@ -40,6 +43,7 @@ public class Point implements Geometry, Serializable
 
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.spatialReference = new SpatialReference(SpatialReference.WKID_WGS84);
 	}
 
 	/**
@@ -55,6 +59,7 @@ public class Point implements Geometry, Serializable
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.z = altitude;
+		this.spatialReference = new SpatialReference(SpatialReference.WKID_WGS84);
 	}
 
 	/* (non-Javadoc)
@@ -118,6 +123,24 @@ public class Point implements Geometry, Serializable
 	public void setZ(Double z)
 	{
 		this.z = z;
+	}
+
+	/**
+	 * Method to get the spatial reference.
+	 * @return
+	 */
+	public SpatialReference getSpatialReference()
+	{
+		return spatialReference;
+	}
+
+	/**
+	 * Method to set the spatial reference.
+	 * @param spatialReference
+	 */
+	public void setSpatialReference(SpatialReference spatialReference)
+	{
+		this.spatialReference = spatialReference;
 	}
 
 	/**

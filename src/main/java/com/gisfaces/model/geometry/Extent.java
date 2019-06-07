@@ -14,12 +14,6 @@ public class Extent implements Geometry, Serializable
 	/** Serial Version UID. */
 	private static final long serialVersionUID = -6871113138424134930L;
 
-	/** Default WKID. */
-	public static final int WKID_WGS84 = 4326;
-
-	/** Spatial reference well-known ID. */
-	private int wkid;
-
 	/** Extent bottom-left X-point (longitude). */
 	private double xmin;
 
@@ -31,6 +25,9 @@ public class Extent implements Geometry, Serializable
 
 	/** Extent top-right Y-point (latitude). */
 	private double ymax;
+
+	/** Spatial reference. */
+	private SpatialReference spatialReference;
 
 	/**
 	 * Constructor.
@@ -68,7 +65,7 @@ public class Extent implements Geometry, Serializable
 	 */
 	public Extent(double xmin, double ymin, double xmax, double ymax)
 	{
-		this(Extent.WKID_WGS84, xmin, ymin, xmax, ymax);
+		this(SpatialReference.WKID_WGS84, xmin, ymin, xmax, ymax);
 	}
 
 	/**
@@ -82,11 +79,11 @@ public class Extent implements Geometry, Serializable
 	public Extent(int wkid, double xmin, double ymin, double xmax, double ymax)
 	{
 		super();
-		this.wkid = wkid;
 		this.xmin = xmin;
 		this.ymin = ymin;
 		this.xmax = xmax;
 		this.ymax = ymax;
+		this.spatialReference = new SpatialReference(wkid);
 	}
 
 	/* (non-Javadoc)
@@ -96,24 +93,6 @@ public class Extent implements Geometry, Serializable
 	public String getType()
 	{
 		return GeometryType.EXTENT.toString();
-	}
-
-	/**
-	 * Method to get the spatial reference well-known ID.
-	 * @return int
-	 */
-	public int getWkid()
-	{
-		return wkid;
-	}
-
-	/**
-	 * Method to set the spatial reference well-known ID.
-	 * @param wkid
-	 */
-	public void setWkid(int wkid)
-	{
-		this.wkid = wkid;
 	}
 
 	/**
@@ -186,6 +165,24 @@ public class Extent implements Geometry, Serializable
 	public void setYmax(double ymax)
 	{
 		this.ymax = ymax;
+	}
+
+	/**
+	 * Method to get the spatial reference.
+	 * @return
+	 */
+	public SpatialReference getSpatialReference()
+	{
+		return spatialReference;
+	}
+
+	/**
+	 * Method to set the spatial reference.
+	 * @param spatialReference
+	 */
+	public void setSpatialReference(SpatialReference spatialReference)
+	{
+		this.spatialReference = spatialReference;
 	}
 
 	/**
