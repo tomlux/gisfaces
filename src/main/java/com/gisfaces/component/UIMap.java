@@ -31,6 +31,7 @@ import com.gisfaces.event.MapSelectEvent;
 import com.gisfaces.model.geometry.Extent;
 import com.gisfaces.model.geometry.Geometry;
 import com.gisfaces.model.geometry.GeometryFactory;
+import com.gisfaces.model.geometry.SpatialReference;
 import com.gisfaces.model.graphic.Graphic;
 import com.gisfaces.model.layer.CSVLayer;
 import com.gisfaces.model.layer.FeatureLayer;
@@ -220,7 +221,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					for (ClientBehavior behavior : behaviors)
 					{
 						Extent extent = new Extent();
-						extent.setWkid(Integer.parseInt(wkid));
+						extent.setSpatialReference(new SpatialReference(Integer.parseInt(wkid)));
 						extent.setXmin(Double.parseDouble(xmin));
 						extent.setYmin(Double.parseDouble(ymin));
 						extent.setXmax(Double.parseDouble(xmax));
