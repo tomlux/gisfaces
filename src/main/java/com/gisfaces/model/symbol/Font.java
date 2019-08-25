@@ -12,7 +12,7 @@ public class Font implements Serializable
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 6253107222387937071L;
 
-	/** Font decoration. */
+	/** Font decoration (underline | line-through | none). */
 	private String decoration;
 
 	/** Font family. */
@@ -21,10 +21,10 @@ public class Font implements Serializable
 	/** Font size. */
 	private String size;
 
-	/** Font style. */
+	/** Font style (normal | italic | oblique). */
 	private String style;
 
-	/** Font weight. */
+	/** Font weight (normal | bold | bolder | lighter). */
 	private String weight;
 
 	/**
@@ -33,6 +33,36 @@ public class Font implements Serializable
 	public Font()
 	{
 		super();
+	}
+
+	/**
+	 * Constructor.
+	 * @param family Font family.
+	 * @param size String size
+	 */
+	public Font(String family, String size)
+	{
+		super();
+		this.family = family;
+		this.size = size;
+	}
+
+	/**
+	 * Constructor.
+	 * @param decoration Font decoration (underline | line-through | none).
+	 * @param family Font family.
+	 * @param size String size
+	 * @param style Font style (normal | italic | oblique).
+	 * @param weight Font weight (normal | bold | bolder | lighter).
+	 */
+	public Font(String decoration, String family, String size, String style, String weight)
+	{
+		super();
+		this.decoration = decoration;
+		this.family = family;
+		this.size = size;
+		this.style = style;
+		this.weight = weight;
 	}
 
 	/**
