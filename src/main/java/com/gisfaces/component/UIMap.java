@@ -715,7 +715,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					else
 					{
 						// Remove all existing graphics.
-						writer.write(String.format("com.gisfaces.removeAllGraphics(com.gisfaces.findLayer('%s'));", layer.getId()));
+						writer.write(String.format("com.gisfaces.removeAllGraphics('%s');", layer.getId()));
 					}
 
 					// Add defined graphics.

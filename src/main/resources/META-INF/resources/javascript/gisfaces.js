@@ -1705,8 +1705,11 @@ require([
 	com.gisfaces.removeAllGraphics = function(layerId) {
 		console.log("Removing all graphics from layer id '%s'.", layerId);
 
+		// Get the layer.
 		var layer = com.gisfaces.findLayer(layerId);
-		if (layer) {
+		if (layer && layer.graphics && (layer.graphics.length > 0)) {
+			// Remove all graphics from the layer.
+			console.log("Removing '%s' graphics from layer id '%s'.", layer.graphics.length, layerId);
 			layer.removeAll();
 		}
 	}
