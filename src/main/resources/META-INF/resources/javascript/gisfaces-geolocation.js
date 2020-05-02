@@ -1,4 +1,4 @@
-/* Copyright © 2013-2019 Chris Duncan (cduncan@gisfaces.com) - All Rights Reserved */
+/* Copyright © 2013-2020 Chris Duncan (cduncan@gisfaces.com) - All Rights Reserved */
 
 /**
  * GISFaces geo-location javascript library.
