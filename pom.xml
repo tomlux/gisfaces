@@ -62,7 +62,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.8.1</version>
 				<configuration>
 					<fork>true</fork>
 					<source>1.7</source>
@@ -72,7 +72,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.2.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -84,8 +84,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.2.0</version>
 				<configuration>
+					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+					<source>7</source>
 					<doctitle>${project.organization.name} ${project.version} API</doctitle>
 					<defaultAuthor>${project.developers[0].name} (${project.developers[0].email})</defaultAuthor>
 					<author>true</author>
@@ -122,7 +124,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>3.2.3</version>
 				<configuration>
 					<webResources>
 						<resource>
