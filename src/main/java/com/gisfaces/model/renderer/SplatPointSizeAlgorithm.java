@@ -1,63 +1,92 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.gisfaces.model.renderer;
 
 import java.io.Serializable;
 
 /**
  * Splat point size algorithm for point cloud renderer class.
+ * 
  * @author Chris Duncan (cduncan@gisfaces.com)
- * @see <a href="https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-PointCloudRGBRenderer.html#pointSizeAlgorithm">ESRI PointSizeAlgorithm</a>
+ * @see <a href=
+ *      "https://developers.arcgis.com/javascript/latest/api-reference/esri-renderers-PointCloudRGBRenderer.html#pointSizeAlgorithm">ESRI
+ *      PointSizeAlgorithm</a>
  */
-public class SplatPointSizeAlgorithm implements PointSizeAlgorithm, Serializable
-{
+public class SplatPointSizeAlgorithm implements PointSizeAlgorithm, Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = -4115310347190051384L;
 
-	/** Specifies the scale factor that is applied to the size estimated by the density. */
+	/**
+	 * Specifies the scale factor that is applied to the size estimated by the
+	 * density.
+	 */
 	private Integer scaleFactor;
 
 	/**
 	 * Constructor.
 	 */
-	public SplatPointSizeAlgorithm()
-	{
+	public SplatPointSizeAlgorithm() {
 		this(1);
 	}
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param scaleFactor Scale factor.
 	 */
-	public SplatPointSizeAlgorithm(Integer scaleFactor)
-	{
+	public SplatPointSizeAlgorithm(Integer scaleFactor) {
 		super();
 
 		this.scaleFactor = scaleFactor;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.gisfaces.model.renderer.PointSizeAlgorithm#getType()
 	 */
 	@Override
-	public String getType()
-	{
+	public String getType() {
 		return "splat";
 	}
 
 	/**
 	 * Method to get the scale factor.
+	 * 
 	 * @return
 	 */
-	public Integer getScaleFactor()
-	{
+	public Integer getScaleFactor() {
 		return scaleFactor;
 	}
 
 	/**
 	 * Method to set the scale factor.
+	 * 
 	 * @param scaleFactor
 	 */
-	public void setScaleFactor(Integer scaleFactor)
-	{
+	public void setScaleFactor(Integer scaleFactor) {
 		this.scaleFactor = scaleFactor;
 	}
 }

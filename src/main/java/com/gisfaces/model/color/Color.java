@@ -1,14 +1,40 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.gisfaces.model.color;
 
 import java.io.Serializable;
 
 /**
  * Color class.
+ * 
  * @author Chris Duncan (cduncan@gisfaces.com)
- * @see <a href="https://developers.arcgis.com/javascript/latest/api-reference/esri-Color.html">ESRI Color</a>
+ * @see <a href=
+ *      "https://developers.arcgis.com/javascript/latest/api-reference/esri-Color.html">ESRI
+ *      Color</a>
  */
-public class Color implements Serializable
-{
+public class Color implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = -3686838425059885831L;
 
@@ -26,15 +52,14 @@ public class Color implements Serializable
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param hex Hex string.
 	 */
-	public Color(String hex)
-	{
+	public Color(String hex) {
 		super();
 
 		// Ensure proper hex color string format.
-		if ((hex != null) && (!hex.startsWith("#")))
-		{
+		if ((hex != null) && (!hex.startsWith("#"))) {
 			hex = "#".concat(hex);
 		}
 
@@ -48,24 +73,24 @@ public class Color implements Serializable
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param r Red value.
 	 * @param g Green value.
 	 * @param b Blue value.
 	 */
-	public Color(int r, int g, int b)
-	{
+	public Color(int r, int g, int b) {
 		this(r, g, b, 1.0d);
 	}
 
 	/**
 	 * Constructor.
+	 * 
 	 * @param r Red value.
 	 * @param g Green value.
 	 * @param b Blue value.
 	 * @param a Alpha value.
 	 */
-	public Color(int r, int g, int b, double a)
-	{
+	public Color(int r, int g, int b, double a) {
 		super();
 		this.r = r;
 		this.g = g;
@@ -75,73 +100,73 @@ public class Color implements Serializable
 
 	/**
 	 * Method to get the red value.
+	 * 
 	 * @return
 	 */
-	public int getR()
-	{
+	public int getR() {
 		return r;
 	}
 
 	/**
 	 * Method to set the red value.
+	 * 
 	 * @param r
 	 */
-	public void setR(int r)
-	{
+	public void setR(int r) {
 		this.r = r;
 	}
 
 	/**
 	 * Method to get the green value.
+	 * 
 	 * @return
 	 */
-	public int getG()
-	{
+	public int getG() {
 		return g;
 	}
 
 	/**
 	 * Method to set the green value.
+	 * 
 	 * @param g
 	 */
-	public void setG(int g)
-	{
+	public void setG(int g) {
 		this.g = g;
 	}
 
 	/**
 	 * Method to get the blue value.
+	 * 
 	 * @return
 	 */
-	public int getB()
-	{
+	public int getB() {
 		return b;
 	}
 
 	/**
 	 * Method to set the blue value.
+	 * 
 	 * @param b
 	 */
-	public void setB(int b)
-	{
+	public void setB(int b) {
 		this.b = b;
 	}
 
 	/**
 	 * Method to get the alpha value.
+	 * 
 	 * @return
 	 */
-	public double getA()
-	{
+	public double getA() {
 		return a;
 	}
 
 	/**
 	 * Method to set the alpha value.
+	 * 
 	 * @param a
 	 */
-	public void setA(double a)
-	{
+	public void setA(double a) {
 		this.a = a;
 	}
 }

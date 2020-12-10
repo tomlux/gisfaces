@@ -1,23 +1,28 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package com.gisfaces.component;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
-import javax.faces.component.behavior.ClientBehavior;
-import javax.faces.component.behavior.ClientBehaviorContext;
-import javax.faces.component.behavior.ClientBehaviorHolder;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.gisfaces.event.Event;
 import com.gisfaces.event.MapBasemapEvent;
@@ -61,104 +66,122 @@ import com.gisfaces.utilities.StringUtilities;
 import com.gisfaces.utilities.json.JSONException;
 import com.gisfaces.utilities.json.JSONObject;
 import com.gisfaces.utilities.json.JSONVisitor;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
+import javax.faces.component.FacesComponent;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
+import javax.faces.component.behavior.ClientBehavior;
+import javax.faces.component.behavior.ClientBehaviorContext;
+import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 /**
  * GIS map custom component using the ESRI ArcGIS JavaScript API.
+ * 
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 @FacesComponent("com.gisfaces.component.Map")
-@ResourceDependencies({
-	@ResourceDependency(library="javax.faces", name="jsf.js", target="head")
-})
-public class UIMap extends UIComponentBase implements ClientBehaviorHolder
-{
+@ResourceDependencies({ @ResourceDependency(library = "javax.faces", name = "jsf.js", target = "head") })
+public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 	/**
 	 * Constructor.
 	 */
-	public UIMap()
-	{
+	public UIMap() {
 		super();
 		setRendererType(null);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.faces.component.UIComponent#getFamily()
 	 */
 	@Override
-	public String getFamily()
-	{
+	public String getFamily() {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.faces.component.UIComponentBase#getEventNames()
 	 */
 	@Override
-	public Collection<String> getEventNames()
-	{
-		return Arrays.asList(Event.BASEMAP.toString(), Event.CLICK.toString(), Event.EXTENT.toString(), Event.SELECT.toString(), Event.GEOLOCATION.toString(), Event.GRAPHICCREATE.toString(), Event.GRAPHICUPDATE.toString(), Event.GRAPHICDELETE.toString());
+	public Collection<String> getEventNames() {
+		return Arrays.asList(Event.BASEMAP.toString(), Event.CLICK.toString(), Event.EXTENT.toString(), Event.SELECT.toString(), Event.GEOLOCATION.toString(),
+				Event.GRAPHICCREATE.toString(), Event.GRAPHICUPDATE.toString(), Event.GRAPHICDELETE.toString());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.faces.component.UIComponentBase#getDefaultEventName()
 	 */
 	@Override
-	public String getDefaultEventName()
-	{
+	public String getDefaultEventName() {
 		return Event.CLICK.toString();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see javax.faces.component.UIComponentBase#getRendersChildren()
 	 */
 	@Override
-	public boolean getRendersChildren()
-	{
+	public boolean getRendersChildren() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.faces.component.UIComponentBase#decode(javax.faces.context.FacesContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.faces.component.UIComponentBase#decode(javax.faces.context.
+	 * FacesContext)
 	 */
 	@Override
-	public void decode(FacesContext context)
-	{
+	public void decode(FacesContext context) {
 		String clientId = this.getClientId();
 
-		if (ComponentUtilities.isComponentRequest(context, clientId));
+		if (ComponentUtilities.isComponentRequest(context, clientId))
+			;
 		{
 			Map<String, String> params = context.getExternalContext().getRequestParameterMap();
 
 			// Get the ajax behavior event name.
 			String name = params.get("javax.faces.behavior.event");
 
-			if (Event.BASEMAP.toString().equals(name))
-			{
+			if (Event.BASEMAP.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.BASEMAP.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String title = params.get("gisfaces.basemap.title");
 
 					// Get the basemap enum based on the title.
 					Basemap b = Basemap.getBasemapByTitle(title);
-					if (b == null)
-					{
-						// Set a default basemap since there are several basemaps in the basemap gallery do not have a well known name.
+					if (b == null) {
+						// Set a default basemap since there are several basemaps in the basemap gallery
+						// do not have a well known name.
 						b = Basemap.STREETS;
 					}
 
 					// Set the new values in the managed bean.
 					MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
-					if (model != null)
-					{
+					if (model != null) {
 						model.setBasemap(b);
 					}
 
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						// Create the custom map event.
 						MapBasemapEvent event = new MapBasemapEvent(this, behavior);
 						event.setBasemapTitle(title);
@@ -167,20 +190,16 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						queueEvent(event);
 					}
 				}
-			}
-			else if (Event.CLICK.toString().equals(name))
-			{
+			} else if (Event.CLICK.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.CLICK.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String latitude = params.get("gisfaces.latitude");
 					String longitude = params.get("gisfaces.longitude");
 
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						// Create the custom map event.
 						MapClickEvent event = new MapClickEvent(this, behavior);
 						event.setLatitude(Double.parseDouble(latitude));
@@ -190,9 +209,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						queueEvent(event);
 					}
 				}
-			}
-			else if (Event.EXTENT.toString().equals(name))
-			{
+			} else if (Event.EXTENT.toString().equals(name)) {
 				// Get the request parameters.
 				String latitude = params.get("gisfaces.latitude");
 				String longitude = params.get("gisfaces.longitude");
@@ -206,8 +223,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 				// Set the new values in the managed bean.
 				MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
-				if (model != null)
-				{
+				if (model != null) {
 					model.getViewpoint().setLatitude(Double.parseDouble(latitude));
 					model.getViewpoint().setLongitude(Double.parseDouble(longitude));
 					model.getViewpoint().setZoom(Double.parseDouble(zoom));
@@ -215,11 +231,9 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.EXTENT.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						Extent extent = new Extent();
 						extent.setSpatialReference(new SpatialReference(Integer.parseInt(wkid)));
 						extent.setXmin(Double.parseDouble(xmin));
@@ -239,13 +253,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						queueEvent(event);
 					}
 				}
-			}
-			else if (Event.SELECT.toString().equals(name))
-			{
+			} else if (Event.SELECT.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.SELECT.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String id = params.get("gisfaces.id");
 					String layerId = params.get("gisfaces.layerId");
@@ -256,8 +267,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 					Map<String, Object> attribsMap = StringUtilities.toMap(attribsJson);
 
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						// Create the custom map event.
 						MapSelectEvent event = new MapSelectEvent(this, behavior);
 						event.setGraphicId(id);
@@ -270,9 +280,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						queueEvent(event);
 					}
 				}
-			}
-			else if (Event.GEOLOCATION.toString().equals(name))
-			{
+			} else if (Event.GEOLOCATION.toString().equals(name)) {
 				// Get the request parameters.
 				String timestamp = params.get("gisfaces.timestamp");
 				String latitude = params.get("gisfaces.latitude");
@@ -285,19 +293,16 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 				// Set the new values in the managed bean.
 				MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
-				if (model != null)
-				{
+				if (model != null) {
 					model.getViewpoint().setLatitude(Double.parseDouble(latitude));
 					model.getViewpoint().setLongitude(Double.parseDouble(longitude));
 				}
 
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GEOLOCATION.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						// Create the custom map event.
 						MapGeoLocationEvent event = new MapGeoLocationEvent(this, behavior);
 						event.setTimestamp(Long.parseLong(timestamp));
@@ -313,21 +318,17 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						queueEvent(event);
 					}
 				}
-			}
-			else if (Event.GRAPHICCREATE.toString().equals(name))
-			{
+			} else if (Event.GRAPHICCREATE.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICCREATE.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String layerId = params.get("gisfaces.layerId");
 					String graphicId = params.get("gisfaces.graphicId");
 					String geometryType = params.get("gisfaces.geometryType");
 					String geometryJson = params.get("gisfaces.geometryJson");
 
-					try
-					{
+					try {
 						// Create a JSON object from the geometry JSON parameters.
 						JSONObject jo = new JSONObject(geometryJson);
 						jo.put("type", geometryType);
@@ -336,8 +337,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						Geometry geometry = new GeometryFactory().create(jo);
 
 						// Send an event to all registered listeners.
-						for (ClientBehavior behavior : behaviors)
-						{
+						for (ClientBehavior behavior : behaviors) {
 							// Create the custom map event.
 							MapGraphicCreateEvent event = new MapGraphicCreateEvent(this, behavior);
 							event.setLayerId(layerId);
@@ -347,27 +347,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 							// Send the event.
 							queueEvent(event);
 						}
-					}
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						throw new IllegalArgumentException("An error occurred processing graphic JSON geometry.", e);
 					}
 				}
-			}
-			else if (Event.GRAPHICUPDATE.toString().equals(name))
-			{
+			} else if (Event.GRAPHICUPDATE.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICUPDATE.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String layerId = params.get("gisfaces.layerId");
 					String graphicId = params.get("gisfaces.graphicId");
 					String geometryType = params.get("gisfaces.geometryType");
 					String geometryJson = params.get("gisfaces.geometryJson");
 
-					try
-					{
+					try {
 						// Create a JSON object from the geometry JSON parameters.
 						JSONObject jo = new JSONObject(geometryJson);
 						jo.put("type", geometryType);
@@ -376,8 +370,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 						Geometry geometry = new GeometryFactory().create(jo);
 
 						// Send an event to all registered listeners.
-						for (ClientBehavior behavior : behaviors)
-						{
+						for (ClientBehavior behavior : behaviors) {
 							// Create the custom map event.
 							MapGraphicUpdateEvent event = new MapGraphicUpdateEvent(this, behavior);
 							event.setLayerId(layerId);
@@ -387,26 +380,20 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 							// Send the event.
 							queueEvent(event);
 						}
-					}
-					catch (JSONException e)
-					{
+					} catch (JSONException e) {
 						throw new IllegalArgumentException("An error occurred processing graphic JSON geometry.", e);
 					}
 				}
-			}
-			else if (Event.GRAPHICDELETE.toString().equals(name))
-			{
+			} else if (Event.GRAPHICDELETE.toString().equals(name)) {
 				// Check for registered event listeners.
 				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICDELETE.toString());
-				if ((behaviors != null) && !behaviors.isEmpty())
-				{
+				if ((behaviors != null) && !behaviors.isEmpty()) {
 					// Get the request parameters.
 					String layerId = params.get("gisfaces.layerId");
 					String graphicId = params.get("gisfaces.graphicId");
 
 					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors)
-					{
+					for (ClientBehavior behavior : behaviors) {
 						// Create the custom map event.
 						MapGraphicDeleteEvent event = new MapGraphicDeleteEvent(this, behavior);
 						event.setLayerId(layerId);
@@ -420,19 +407,20 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.faces.component.UIComponentBase#encodeBegin(javax.faces.context.FacesContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.faces.component.UIComponentBase#encodeBegin(javax.faces.context.
+	 * FacesContext)
 	 */
 	@Override
-	public void encodeBegin(FacesContext context) throws IOException
-	{
+	public void encodeBegin(FacesContext context) throws IOException {
 		// Get the component attributes.
 		String panel = ComponentUtilities.getStringAttribute(this, Constants.ATTRIBUTE_PANEL);
 		MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
 
 		// Set a default map model if not explicitly defined.
-		if (model == null)
-		{
+		if (model == null) {
 			model = new MapModel();
 		}
 
@@ -448,28 +436,30 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 		// Get the response writer.
 		ResponseWriter writer = context.getResponseWriter();
 
-		// Encode custom component html with client ID necessary for event functionality.
+		// Encode custom component html with client ID necessary for event
+		// functionality.
 		writer.startElement("span", this);
 		writer.writeAttribute("id", clientId, null);
 		writer.endElement("span");
 
-		if (!context.isPostback())
-		{
+		if (!context.isPostback()) {
 			// Encode ESRI JSAPI resources.
-			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s/esri/themes/%s/main.css'></link>", model.getConfiguration().getJsApiUrl(), model.getMapTheme().getValue()));
+			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s/esri/themes/%s/main.css'></link>",
+					model.getConfiguration().getJsApiUrl(), model.getMapTheme().getValue()));
 			writer.write(String.format("<script type='text/javascript' src='%s'></script>", model.getConfiguration().getJsApiUrl()));
 
 			// Encode the GISFaces resources.
-			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s'></link>", ComponentUtilities.getResource(context, "css", "gisfaces.css").getRequestPath()));
-			writer.write(String.format("<script type='text/javascript' src='%s'></script>", ComponentUtilities.getResource(context, "javascript", "gisfaces.js").getRequestPath()));
+			writer.write(String.format("<link rel='stylesheet' type='text/css' href='%s'></link>",
+					ComponentUtilities.getResource(context, "css", "gisfaces.css").getRequestPath()));
+			writer.write(String.format("<script type='text/javascript' src='%s'></script>",
+					ComponentUtilities.getResource(context, "javascript", "gisfaces.js").getRequestPath()));
 		}
 
 		// Encode the javascript block open.
 		writer.startElement("script", this);
 		writer.writeAttribute("type", "text/javascript", null);
 
-		if (!context.isPostback())
-		{
+		if (!context.isPostback()) {
 			// Encode the initialization function.
 			writer.write("com.gisfaces.initializeMapView = function() {");
 
@@ -477,43 +467,37 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			writer.write("com.gisfaces.getWebGLSupportLevel();");
 
 			// Encode the local service configuration overrides.
-			if ((model != null) && (model.getConfiguration() != null))
-			{
+			if ((model != null) && (model.getConfiguration() != null)) {
 				Configuration config = model.getConfiguration();
 
-				if (config.getGeometryServiceUrl() != null)
-				{
+				if (config.getGeometryServiceUrl() != null) {
 					// Encode the local geometry service URL.
 					writer.write(String.format("com.gisfaces.setGeometryService('%s');", config.getGeometryServiceUrl()));
 				}
 
-				if (config.getGeoRssServiceUrl() != null)
-				{
+				if (config.getGeoRssServiceUrl() != null) {
 					// Encode the local geoRSS service URL.
 					writer.write(String.format("com.gisfaces.setGeoRssService('%s');", config.getGeoRssServiceUrl()));
 				}
 
-				if (config.getKmlServiceUrl() != null)
-				{
+				if (config.getKmlServiceUrl() != null) {
 					// Encode the local KML service URL.
 					writer.write(String.format("com.gisfaces.setKmlService('%s');", config.getKmlServiceUrl()));
 				}
 
-				if (config.getPortalUrl() != null)
-				{
+				if (config.getPortalUrl() != null) {
 					// Encode the local portal service URL.
 					writer.write(String.format("com.gisfaces.setPortalService('%s');", config.getPortalUrl()));
 				}
 
-				if (config.isProxyEnabled())
-				{
+				if (config.isProxyEnabled()) {
 					// Get the proxy url override.
 					String url = config.getProxyUrl();
-					if (url == null)
-					{
+					if (url == null) {
 						// Build the url to the included proxy page.
 						ExternalContext ec = context.getExternalContext();
-						url = String.format("%s://%s:%s%s%s", ec.getRequestScheme(), ec.getRequestServerName(), ec.getRequestServerPort(), ec.getRequestContextPath(), Constants.DEFAULT_PROXY_PAGE);
+						url = String.format("%s://%s:%s%s%s", ec.getRequestScheme(), ec.getRequestServerName(), ec.getRequestServerPort(),
+								ec.getRequestContextPath(), Constants.DEFAULT_PROXY_PAGE);
 					}
 
 					// Encode the local proxy service URL.
@@ -525,36 +509,30 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			writer.write(String.format("com.gisfaces.clientId = '%s';", clientId));
 
 			// Encode the map.
-			if (model.getWebMapPortalItemId() != null)
-			{
+			if (model.getWebMapPortalItemId() != null) {
 				// Encode the web map portal item.
 				writer.write(String.format("com.gisfaces.createWebMap('%s');", model.getWebMapPortalItemId()));
-			}
-			else
-			{
-				if (is3d)
-				{
+			} else {
+				if (is3d) {
 					// Encode the map.
-					// 3d map ground layer "world-topobathymetry" uses "world-elevation" for land and includes oceans.
+					// 3d map ground layer "world-topobathymetry" uses "world-elevation" for land
+					// and includes oceans.
 					writer.write(String.format("com.gisfaces.createMap('%s', 'world-topobathymetry');", model.getBasemap().getValue()));
-				}
-				else
-				{
+				} else {
 					// Encode the 2d map.
 					writer.write(String.format("com.gisfaces.createMap('%s', null);", model.getBasemap().getValue()));
 				}
 			}
 
 			// Encode the view.
-			if (is3d)
-			{
+			if (is3d) {
 				// Encode a 3d scene view.
-				writer.write(String.format("com.gisfaces.createSceneView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
-			}
-			else
-			{
+				writer.write(String.format("com.gisfaces.createSceneView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(),
+						model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
+			} else {
 				// Encode a 2d map view.
-				writer.write(String.format("com.gisfaces.createMapView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
+				writer.write(String.format("com.gisfaces.createMapView('%s', %s, %s, %s);", panel, model.getViewpoint().getLatitude(),
+						model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
 			}
 
 			// Encode all map widgets.
@@ -587,11 +565,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 			// Invoke initialization once all modules are loaded.
 			writer.write("com.gisfaces.addDomLoadedListener(com.gisfaces.initializeMapView);");
-		}
-		else
-		{
+		} else {
 			// Update the map extent.
-			writer.write(String.format("com.gisfaces.zoomToCoordinate(%s, %s, %s);", model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(), model.getViewpoint().getZoom()));
+			writer.write(String.format("com.gisfaces.zoomToCoordinate(%s, %s, %s);", model.getViewpoint().getLatitude(), model.getViewpoint().getLongitude(),
+					model.getViewpoint().getZoom()));
 
 			// Update the map basemap layer.
 			writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getValue()));
@@ -606,14 +583,14 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to encode all map layers.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
-	 * @param model MapModel
+	 * @param writer    ResponseWriter
+	 * @param model     MapModel
 	 * @throws IOException
 	 */
-	private void encodeMapLayers(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
-	{
+	private void encodeMapLayers(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException {
 		// Encode map layer removals.
 		this.encodeMapLayerRemovals(context, component, writer, model);
 
@@ -623,22 +600,19 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to encode map layer removals.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
-	 * @param model MapModel
+	 * @param writer    ResponseWriter
+	 * @param model     MapModel
 	 * @throws IOException
 	 */
-	private void encodeMapLayerRemovals(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
-	{
-		if (model != null)
-		{
+	private void encodeMapLayerRemovals(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException {
+		if (model != null) {
 			// Build a list of the currently specified layer IDs.
 			List<String> ids = new ArrayList<String>();
-			if (model.getLayers() != null)
-			{
-				for(Layer layer : model.getLayers())
-				{
+			if (model.getLayers() != null) {
+				for (Layer layer : model.getLayers()) {
 					ids.add(String.format("'%s'", layer.getId()));
 				}
 			}
@@ -650,186 +624,144 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to encode map layer inserts and updates.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
-	 * @param model MapModel
+	 * @param writer    ResponseWriter
+	 * @param model     MapModel
 	 * @throws IOException
 	 */
-	private void encodeMapLayerUpdates(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException
-	{
-		if ((model != null) && (model.getLayers() != null))
-		{
+	private void encodeMapLayerUpdates(FacesContext context, UIComponent component, ResponseWriter writer, MapModel model) throws IOException {
+		if ((model != null) && (model.getLayers() != null)) {
 			// Process all defined layers.
 			List<Layer> layers = model.getLayers();
-			for (int i=0; i<layers.size(); i++)
-			{
+			for (int i = 0; i < layers.size(); i++) {
 				// Get the layer.
 				Layer layer = layers.get(i);
 
-				if (layer instanceof CSVLayer)
-				{
+				if (layer instanceof CSVLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((CSVLayer)layer, true);
+					JSONObject jo = new JSONObject((CSVLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.CSV.toString(), jo, i, false));
-				}
-				else if (layer instanceof FeatureLayer)
-				{
+				} else if (layer instanceof FeatureLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((FeatureLayer)layer, true);
+					JSONObject jo = new JSONObject((FeatureLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.FEATURE.toString(), jo, i, false));
-				}
-				else if (layer instanceof GeoJSONLayer)
-				{
+				} else if (layer instanceof GeoJSONLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((GeoJSONLayer)layer, true);
+					JSONObject jo = new JSONObject((GeoJSONLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEOJSON.toString(), jo, i, false));
-				}
-				else if (layer instanceof GeoRSSLayer)
-				{
+				} else if (layer instanceof GeoRSSLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((GeoRSSLayer)layer, true);
+					JSONObject jo = new JSONObject((GeoRSSLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEO_RSS.toString(), jo, i, false));
-				}
-				else if (layer instanceof GraphicsLayer)
-				{
-					if (!context.isPostback())
-					{
+				} else if (layer instanceof GraphicsLayer) {
+					if (!context.isPostback()) {
 						// Add new layer.
 						writer.write(String.format("com.gisfaces.addGraphicsLayer('%s', '%s', %s);", layer.getId(), layer.getTitle(), i));
 
 						// Enable sketch widget.
-						if (((GraphicsLayer) layer).isEditable())
-						{
+						if (((GraphicsLayer) layer).isEditable()) {
 							writer.write(String.format("com.gisfaces.createSketchWidget(com.gisfaces.findLayer('%s'));", layer.getId()));
 						}
-					}
-					else
-					{
+					} else {
 						// Remove all existing graphics.
 						writer.write(String.format("com.gisfaces.removeAllGraphics('%s');", layer.getId()));
 					}
 
 					// Add defined graphics.
-					if (((GraphicsLayer) layer).getGraphics() != null)
-					{
-						for (Graphic g : ((GraphicsLayer) layer).getGraphics())
-						{
+					if (((GraphicsLayer) layer).getGraphics() != null) {
+						for (Graphic g : ((GraphicsLayer) layer).getGraphics()) {
 							JSONObject jo = new JSONObject(g, true);
 							this.sanitizeJsonObject(jo);
 							writer.write(String.format("com.gisfaces.addGraphic('%s', com.gisfaces.createGraphic(%s));", layer.getId(), jo));
 						}
 					}
-				}
-				else if (layer instanceof ImageryLayer)
-				{
+				} else if (layer instanceof ImageryLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((ImageryLayer)layer, true);
+					JSONObject jo = new JSONObject((ImageryLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.IMAGERY.toString(), jo, i, false));
-				}
-				else if (layer instanceof IntegratedMeshLayer)
-				{
+				} else if (layer instanceof IntegratedMeshLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((IntegratedMeshLayer)layer, true);
+					JSONObject jo = new JSONObject((IntegratedMeshLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.INTEGRATED_MESH.toString(), jo, i, false));
-				}
-				else if (layer instanceof KMLLayer)
-				{
+				} else if (layer instanceof KMLLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((KMLLayer)layer, true);
+					JSONObject jo = new JSONObject((KMLLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.KML.toString(), jo, i, false));
-				}
-				else if (layer instanceof MapImageLayer)
-				{
+				} else if (layer instanceof MapImageLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((MapImageLayer)layer, true);
+					JSONObject jo = new JSONObject((MapImageLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
-					if (((MapImageLayer) layer).getSublayers().isEmpty())
-					{
+					if (((MapImageLayer) layer).getSublayers().isEmpty()) {
 						// Remove the sublayers key if not explicitly specified.
 						jo.remove("sublayers");
 					}
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.MAP_IMAGE.toString(), jo, i, false));
-				}
-				else if (layer instanceof PointCloudLayer)
-				{
+				} else if (layer instanceof PointCloudLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((PointCloudLayer)layer, true);
+					JSONObject jo = new JSONObject((PointCloudLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					// Opacity is not supported on point cloud layers.
 					jo.remove("opacity");
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.POINT_CLOUD.toString(), jo, i, false));
-				}
-				else if (layer instanceof PortalLayer)
-				{
+				} else if (layer instanceof PortalLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((PortalLayer)layer, true);
+					JSONObject jo = new JSONObject((PortalLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.PORTAL.toString(), jo, i, false));
-				}
-				else if (layer instanceof SceneLayer)
-				{
+				} else if (layer instanceof SceneLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((SceneLayer)layer, true);
+					JSONObject jo = new JSONObject((SceneLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.SCENE.toString(), jo, i, false));
-				}
-				else if (layer instanceof StreamLayer)
-				{
+				} else if (layer instanceof StreamLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((StreamLayer)layer, true);
+					JSONObject jo = new JSONObject((StreamLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.STREAM.toString(), jo, i, false));
-				}
-				else if (layer instanceof TileLayer)
-				{
+				} else if (layer instanceof TileLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((TileLayer)layer, true);
+					JSONObject jo = new JSONObject((TileLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.TILE.toString(), jo, i, false));
-				}
-				else if (layer instanceof VectorTileLayer)
-				{
+				} else if (layer instanceof VectorTileLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((VectorTileLayer)layer, true);
+					JSONObject jo = new JSONObject((VectorTileLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.VECTOR_TILE.toString(), jo, i, false));
-				}
-				else if (layer instanceof WMSLayer)
-				{
+				} else if (layer instanceof WMSLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((WMSLayer)layer, true);
+					JSONObject jo = new JSONObject((WMSLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.WMS.toString(), jo, i, false));
-				}
-				else if (layer instanceof WMTSLayer)
-				{
+				} else if (layer instanceof WMTSLayer) {
 					// Build a JSON object from the layer.
-					JSONObject jo = new JSONObject((WMTSLayer)layer, true);
+					JSONObject jo = new JSONObject((WMTSLayer) layer, true);
 					this.sanitizeJsonObject(jo);
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.WMTS.toString(), jo, i, false));
@@ -840,47 +772,40 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to sanitize the JSON object before usage.
+	 * 
 	 * @param jo JSONObject.
 	 */
-	private void sanitizeJsonObject(JSONObject jo)
-	{
-		try
-		{
+	private void sanitizeJsonObject(JSONObject jo) {
+		try {
 			JSONVisitor visitor = new JSONVisitor(jo);
-			visitor.visit(new JSONVisitor.Filter()
-			{
+			visitor.visit(new JSONVisitor.Filter() {
 				@Override
-				public void accept(JSONObject jo, String key)
-				{
-					if (jo.isNull(key) || "class".equals(key))
-					{
+				public void accept(JSONObject jo, String key) {
+					if (jo.isNull(key) || "class".equals(key)) {
 						jo.remove(key);
 					}
 				}
 			});
-		}
-		catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			throw new IllegalArgumentException("An error occurred processing JSON nodes.", e);
 		}
 	}
 
 	/**
 	 * Method to encode the function which generates a JSF map basemap AJAX event.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapBasemapFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapBasemapFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapBasemapEvent = function(title) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.BASEMAP.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Add parameters for decode.
@@ -888,10 +813,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.basemap.title", "title"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.BASEMAP.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.BASEMAP.toString(), this.getClientId(),
+						parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -907,20 +832,19 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to encode the function which generates a JSF map click AJAX event.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapClickFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapClickFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapClickEvent = function(e) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.CLICK.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Add parameters for decode.
@@ -929,10 +853,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.longitude", "e.mapPoint.longitude"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.CLICK.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.CLICK.toString(), this.getClientId(),
+						parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -947,21 +871,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	}
 
 	/**
-	 * Method to encode the function which generates a JSF map extent change AJAX event.
-	 * @param context FacesContext
+	 * Method to encode the function which generates a JSF map extent change AJAX
+	 * event.
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapExtentFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapExtentFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapExtentEvent = function(view) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.EXTENT.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 			writer.write("var extent = com.gisfaces.convertGeometryToGeographicUnits(view.extent);");
 
@@ -978,10 +902,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.extent.ymax", "extent.ymax"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.EXTENT.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.EXTENT.toString(), this.getClientId(),
+						parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -997,20 +921,19 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 
 	/**
 	 * Method to encode the function which generates a JSF map select AJAX event.
-	 * @param context FacesContext
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapSelectFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapSelectFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapSelectEvent = function(graphic) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.SELECT.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Get the ID of the selected graphic.
@@ -1020,7 +943,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			// Attempt to get MapImageLayer layer and sublayer source.
 			writer.write("var layerId = graphic.get('sourceLayer.parent.id') || '';");
 			writer.write("var sublayerId = graphic.get('sourceLayer.id') || '';");
-			// Attempt to get the GraphicsLayer and CSVLayer local layer source, if necessary.
+			// Attempt to get the GraphicsLayer and CSVLayer local layer source, if
+			// necessary.
 			writer.write("if (!layerId) { layerId = graphic.get('layer.id') || ''; }");
 
 			// Get the graphic attributes.
@@ -1034,10 +958,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.attributes", "attribs"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.SELECT.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.SELECT.toString(), this.getClientId(),
+						parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -1052,21 +976,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	}
 
 	/**
-	 * Method to encode the function which generates a JSF map geolocation AJAX event.
-	 * @param context FacesContext
+	 * Method to encode the function which generates a JSF map geolocation AJAX
+	 * event.
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapGeoLocationFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapGeoLocationFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapGeoLocationEvent = function(position) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GEOLOCATION.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Add parameters for decode.
@@ -1081,10 +1005,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.speed", "Number(position.coords.speed)"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GEOLOCATION.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GEOLOCATION.toString(),
+						this.getClientId(), parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -1099,21 +1023,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	}
 
 	/**
-	 * Method to encode the function which generates a JSF map graphic create AJAX event.
-	 * @param context FacesContext
+	 * Method to encode the function which generates a JSF map graphic create AJAX
+	 * event.
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapGraphicCreateFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapGraphicCreateFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapGraphicCreateEvent = function(e) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICCREATE.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Get the graphic layer and graphic data.
@@ -1130,10 +1054,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.geometryJson", "geometryJson"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICCREATE.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICCREATE.toString(),
+						this.getClientId(), parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -1148,21 +1072,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	}
 
 	/**
-	 * Method to encode the function which generates a JSF map graphic update AJAX event.
-	 * @param context FacesContext
+	 * Method to encode the function which generates a JSF map graphic update AJAX
+	 * event.
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapGraphicUpdateFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapGraphicUpdateFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapGraphicUpdateEvent = function(e) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICUPDATE.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Iterate over event graphics array.
@@ -1182,10 +1106,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.geometryJson", "geometryJson"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICUPDATE.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICUPDATE.toString(),
+						this.getClientId(), parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
@@ -1202,21 +1126,21 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 	}
 
 	/**
-	 * Method to encode the function which generates a JSF map graphic delete AJAX event.
-	 * @param context FacesContext
+	 * Method to encode the function which generates a JSF map graphic delete AJAX
+	 * event.
+	 * 
+	 * @param context   FacesContext
 	 * @param component UIComponent
-	 * @param writer ResponseWriter
+	 * @param writer    ResponseWriter
 	 * @throws IOException
 	 */
-	private void encodeJsfMapGraphicDeleteFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException
-	{
+	private void encodeJsfMapGraphicDeleteFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
 		writer.write("com.gisfaces.generateJsfMapGraphicDeleteEvent = function(e) {");
 
 		// Get the list of client behavior event listeners specified.
 		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.GRAPHICDELETE.toString());
 
-		if ((behaviors != null) && !behaviors.isEmpty())
-		{
+		if ((behaviors != null) && !behaviors.isEmpty()) {
 			writer.write("var event = null;");
 
 			// Iterate over event graphics array.
@@ -1232,10 +1156,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder
 			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.graphicId", "graphicId"));
 
 			// Generate an event for registered listeners.
-			for (ClientBehavior behavior : behaviors)
-			{
+			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICDELETE.toString(), this.getClientId(), parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.GRAPHICDELETE.toString(),
+						this.getClientId(), parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.
