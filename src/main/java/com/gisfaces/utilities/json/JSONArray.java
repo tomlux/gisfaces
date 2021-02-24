@@ -246,6 +246,8 @@ public class JSONArray {
 				Object o = Array.get(array, i);
 				if (JSONObject.isStandardProperty(o.getClass())) {
 					this.myArrayList.add(o);
+				} else if (o.getClass().isArray()) {
+					this.myArrayList.add(new JSONArray(o, includeSuperClass));
 				} else {
 					this.myArrayList.add(new JSONObject(o, includeSuperClass));
 				}
