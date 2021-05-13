@@ -948,7 +948,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 			writer.write("if (!layerId) { layerId = graphic.get('layer.id') || ''; }");
 
 			// Get the graphic attributes.
-			writer.write("var attribs = escape(dojo.toJson(graphic.attributes));");
+			writer.write("var attribs = escape(JSON.stringify(graphic.attributes));");
 
 			// Add parameters for decode.
 			List<ClientBehaviorContext.Parameter> parameters = new ArrayList<ClientBehaviorContext.Parameter>();
