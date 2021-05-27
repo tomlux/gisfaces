@@ -776,14 +776,8 @@ require([
 				}
 			}
 
-			// Get the screen point necessary for a hit test.
-			var screenPoint = {
-				x: e.x,
-				y: e.y
-			};
-
 			// Search the graphics via hit test.
-			com.gisfaces.view.hitTest(screenPoint).then(com.gisfaces.showGraphicDialog);
+			com.gisfaces.view.hitTest(e).then(com.gisfaces.showGraphicDialog);
 		});
 
 		// Add extent handler.
@@ -848,15 +842,19 @@ require([
 	 * @param response
 	 */
 	com.gisfaces.showGraphicDialog = function(response) {
-		// Get the top-most graphic.
-		var graphic = response.results[0].graphic;
+		console.log("Map popup response is '%s'.", JSON.stringify(response));
 
-		if (graphic) {
-			console.log("Showing map popup dialog for graphic '%s'.", JSON.stringify(graphic));
+		if (response.results.length) {
+			// Get the top-most graphic.
+			var graphic = response.results[0].graphic;
 
-			// Invoke registered listener.
-			if (com.gisfaces.graphicClickListener) {
-				com.gisfaces.graphicClickListener(graphic);
+			if (graphic) {
+				console.log("Showing map popup dialog for graphic '%s'.", JSON.stringify(graphic));
+
+				// Invoke registered listener.
+				if (com.gisfaces.graphicClickListener) {
+					com.gisfaces.graphicClickListener(graphic);
+				}
 			}
 		}
 	}
