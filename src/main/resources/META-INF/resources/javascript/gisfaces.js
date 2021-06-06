@@ -1218,13 +1218,13 @@ require([
 		layer.when(function() {
 			console.log("Map service layer '%s' loaded.", layer.id);
 
-			if (properties.sublayers) {
-				// Set the default popup template for each sublayer.
-				layer.allSublayers.forEach(function(item) {
-					console.log("Setting default popup template for map image layer '%s' and sublayer '%s'.", layer.id, item.id);
-					item.popupTemplate = com.gisfaces.createDefaultPopupTemplate(item.title);
-				});
-			}
+			// Set the default popup template for each sublayer.
+			layer.allSublayers.forEach(function(sublayer) {
+				if (!sublayer.popupTemplate) {
+					console.log("Setting default popup template for map image layer '%s' and sublayer '%s'.", layer.id, sublayer.id);
+					sublayer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(sublayer.title);
+				}
+			});
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
