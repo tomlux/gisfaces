@@ -2059,7 +2059,7 @@ require([
 	 * @param event Sketch event.
 	 */
 	com.gisfaces.onSketchUpdate = function(event) {
-		if (event.state === "complete") {
+		if ((event.state === "complete") && (event.aborted == false)) {
 			console.log("Sketch widget graphics updated.");
 			console.log(event.graphics);
 
