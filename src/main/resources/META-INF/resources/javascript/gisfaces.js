@@ -1016,6 +1016,11 @@ require([
 
 		layer.when(function() {
 			console.log("CSV layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1041,8 +1046,7 @@ require([
 
 			if (!properties.popupTemplate) {
 				// Set the default popup template.
-				console.log("Setting default popup template for feature layer '%s'.", layer.id);
-				layer.popupTemplate = { title: layer.title, content: "{*}" };
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
 			}
 		}, function(e) {
 			// Error loading layer.
@@ -1066,6 +1070,11 @@ require([
 
 		layer.when(function() {
 			console.log("GeoJSON layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1088,6 +1097,11 @@ require([
 
 		layer.when(function() {
 			console.log("GeoRSS layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1112,6 +1126,9 @@ require([
 			title: title
 		});
 
+		// Set the default popup template.
+		layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+
 		// Add the new layer to the map.
 		com.gisfaces.map.add(layer, index);
 	}
@@ -1129,6 +1146,11 @@ require([
 
 		layer.when(function() {
 			console.log("Imagery layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1196,11 +1218,11 @@ require([
 		layer.when(function() {
 			console.log("Map service layer '%s' loaded.", layer.id);
 
-			if (!properties.sublayers) {
+			if (properties.sublayers) {
 				// Set the default popup template for each sublayer.
 				layer.allSublayers.forEach(function(item) {
 					console.log("Setting default popup template for map image layer '%s' and sublayer '%s'.", layer.id, item.id);
-					item.popupTemplate = { title: item.title, content: "{*}" };
+					item.popupTemplate = com.gisfaces.createDefaultPopupTemplate(item.title);
 				});
 			}
 		}, function(e) {
@@ -1225,6 +1247,11 @@ require([
 
 		layer.when(function() {
 			console.log("Point cloud layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1265,6 +1292,11 @@ require([
 
 		layer.when(function() {
 			console.log("Scene layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1287,6 +1319,11 @@ require([
 
 		layer.when(function() {
 			console.log("Stream layer '%s' loaded.", layer.id);
+
+			if (!properties.popupTemplate) {
+				// Set the default popup template.
+				layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
+			}
 		}, function(e) {
 			// Error loading layer.
 			console.error(e);
@@ -1526,7 +1563,7 @@ require([
 		// Set the popup attributes, if specified.
 		if (attributes) {
 			graphic.attributes = attributes;
-			graphic.popupTemplate = { title: title, content: "{*}" };
+			graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
 		}
 
 		// Set the ID for later usage.
@@ -1581,7 +1618,7 @@ require([
 		// Set the popup attributes, if specified.
 		if (attributes) {
 			graphic.attributes = attributes;
-			graphic.popupTemplate = { title: title, content: "{*}" };
+			graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
 		}
 
 		// Set the ID for later usage.
@@ -1629,7 +1666,7 @@ require([
 		// Set the popup attributes, if specified.
 		if (attributes) {
 			graphic.attributes = attributes;
-			graphic.popupTemplate = { title: title, content: "{*}" };
+			graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
 		}
 
 		// Set the ID for later usage.
@@ -1650,6 +1687,9 @@ require([
 
 		// Set the ID property.
 		graphic.id = properties.id;
+
+		// Set the default popup template.
+		graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(properties.id);
 
 		return graphic;
 	}
@@ -2046,7 +2086,7 @@ require([
 
 	/**
 	 * Function to detect browser WebGL support level.
-	 * @returns -1 if not supported, 0 if supported but not enabled, 1 if enabled.
+	 * @return -1 if not supported, 0 if supported but not enabled, 1 if enabled.
 	 */
 	com.gisfaces.getWebGLSupportLevel = function() {
 		console.log("Detecting browser WebGL support level.");
@@ -2075,6 +2115,167 @@ require([
 		// WebGL is not supported.
 		console.log("WebGL is not supported.");
 		return -1;
+	}
+
+	/**
+	 * Function to create a default popup template.
+	 * @return PopupTemplate
+	 */
+	com.gisfaces.createDefaultPopupTemplate = function(title) {
+		console.log("Creating default popup template with title '%s'.", title);
+
+		return { title: title, outFields: ["*"], content: com.gisfaces.createDefaultPopupTemplateContent };
+	}
+
+	/**
+	 * Function to create default popup template content.
+	 * @return Div element.
+	 */
+	com.gisfaces.createDefaultPopupTemplateContent = function(feature) {
+		console.log("Creating default popup template content for feature '%s'.", JSON.stringify(feature));
+
+		var div = document.createElement("div");
+
+		var attributes = null;
+		if (feature.attributes) {
+			attributes = feature.attributes;
+		} else if (feature.graphic && feature.graphic.attributes) {
+			attributes = feature.graphic.attributes;
+		}
+
+		if (attributes != null) {
+			var html = "<table class='esri-widget__table'>";
+
+			for (var name in attributes) {
+				var value = attributes[name];
+
+				if (typeof value === "object") {
+					if (value == null) {
+						value = "";
+					}
+				} else if (typeof value === "string") {
+					if (value.toLowerCase() == "null") {
+						value = "";
+					} else if (com.gisfaces.isImage(value.toLowerCase())) {
+						value = "<a target='_blank' href='" + value + "'><img alt='' height='50' src='" + value + "'/></a>";
+					} else if (com.gisfaces.isLink(value.toLowerCase())) {
+						value = "<a target='_blank' href='" + value + "'>Details</a>";
+					}
+				} else if (typeof value === "number") {
+					// Try to determine if the attribute number is a date based on attribute name.
+					if ((name.toLowerCase().indexOf("date") >= 0) || (name.toLowerCase().indexOf("time") >= 0)) {
+						value = com.gisfaces.getFormattedDate(value);
+					}
+				}
+
+				html += "<tr><td>" + name + "</td><td>" + value + "</td></tr>";
+			}
+
+			html += "</table>";
+
+			div.innerHTML = html;
+		}
+
+		return div;
+	}
+
+	/**
+	 * Function to validate input string is a link.
+	 * @returns {boolean}
+	 */
+	com.gisfaces.isLink = function(s) {
+		return (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("ftp://") || s.startsWith("news://") || s.startsWith("irc://") || s.startsWith("data://") || s.startsWith("mailto:"));
+	}
+
+	/**
+	 * Function to validate input string is an image.
+	 * @returns {boolean}
+	 */
+	com.gisfaces.isImage = function(s) {
+		return (com.gisfaces.isLink(s) && (s.endsWith(".png") || s.endsWith(".jpg") || s.endsWith(".jpeg") || s.endsWith(".gif") || s.endsWith(".bmp")));
+	}
+
+	/**
+	 * Function to determine if the specified parameter is numeric.
+	 * @param x Number to validate.
+	 * @returns {boolean}
+	 */
+	com.gisfaces.isNumeric = function(x) {
+		return ((x) && (isFinite(x) && !isNaN(x)));
+	}
+
+	/**
+	 * Function to get the numeric value, if possible.
+	 * @param x Number to validate.
+	 * @param def Default value to use if not numeric.
+	 * @returns {boolean}
+	 */
+	com.gisfaces.getNumericValue = function(x, def) {
+		return com.gisfaces.isNumeric(x) ? x : def;
+	}
+
+	/**
+	 * Function to get a formatted date.
+	 * @param millis Milliseconds
+	 */
+	com.gisfaces.getFormattedDate = function(millis) {
+		var s = millis;
+
+		try {
+			var date = new Date(millis);
+			s = date.toISOString();
+		} catch (e) {
+		}
+
+		return s;
+	}
+
+	/**
+	 * Prototype for string function.
+	 */
+	String.prototype.startsWith = function(s) {
+		return ((s) && (this.trim().toLowerCase().indexOf(s.trim().toLowerCase()) == 0));
+	}
+
+	/**
+	 * Prototype for string function.
+	 */
+	String.prototype.endsWith = function(s) {
+		return ((s) && (this.trim().toLowerCase().indexOf(s.trim().toLowerCase(), this.trim().length - s.trim().length) !== -1));
+	}
+
+	/**
+	 * Prototype for array contains function.
+	 */
+	Array.prototype.contains = function(value) {
+		for (var i=0; i<this.length; i++) {
+			if (this[i] == value) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Prototype for array addUnique function.
+	 */
+	Array.prototype.addUnique = function(value) {
+		if (!this.contains(value)) {
+			this.push(value);
+		}
+	}
+
+	/**
+	 * Prototype for array remove function.
+	 */
+	Array.prototype.remove = function(value) {
+		if (this.contains(value)) {
+			for (var i=0; i<this.length; i++) {
+				if(this[i] == value) {
+					this.splice(i, 1);
+				}
+			}
+		}
 	}
 
 });

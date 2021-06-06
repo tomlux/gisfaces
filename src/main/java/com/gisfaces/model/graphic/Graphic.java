@@ -78,7 +78,6 @@ public class Graphic implements Serializable {
 	 */
 	public void reset() {
 		this.visible = true;
-		this.popupTemplate = new PopupTemplate("Graphic");
 		this.symbol = new SimpleMarkerSymbol();
 		this.attributes = new LinkedHashMap<String, Object>();
 		this.data = null;

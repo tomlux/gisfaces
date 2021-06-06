@@ -45,7 +45,7 @@ public class PopupTemplate implements Serializable {
 	 * Constructor
 	 */
 	public PopupTemplate() {
-		this("Feature", "{*}");
+		this("Feature");
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class PopupTemplate implements Serializable {
 	 * @param title Popup title.
 	 */
 	public PopupTemplate(String title) {
-		this(title, "{*}");
+		this(title, null);
 	}
 
 	/**

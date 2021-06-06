@@ -34,7 +34,7 @@ import com.gisfaces.model.map.MapType;
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public final class Constants {
-	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.11";
+	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.19";
 	public static final String DEFAULT_PROXY_PAGE = "/proxy/proxy.jsp";
 
 	public static final MapType DEFAULT_TYPE = MapType.THREE_D;
