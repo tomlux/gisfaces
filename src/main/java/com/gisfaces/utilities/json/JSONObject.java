@@ -54,7 +54,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
@@ -170,7 +170,7 @@ public class JSONObject {
 	 * Construct an empty JSONObject.
 	 */
 	public JSONObject() {
-		this.map = new HashMap();
+		this.map = new LinkedHashMap();
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class JSONObject {
 	 *            JSONObject.
 	 */
 	public JSONObject(Map map) {
-		this.map = (map == null) ? new HashMap() : map;
+		this.map = (map == null) ? new LinkedHashMap() : map;
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class JSONObject {
 	 *                          properties.
 	 */
 	public JSONObject(Map map, boolean includeSuperClass) {
-		this.map = new HashMap();
+		this.map = new LinkedHashMap();
 		if (map != null) {
 			Iterator i = map.entrySet().iterator();
 			while (i.hasNext()) {
