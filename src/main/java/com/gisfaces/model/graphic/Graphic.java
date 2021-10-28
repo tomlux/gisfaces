@@ -47,6 +47,9 @@ public class Graphic implements Serializable {
 	/** Graphic ID. */
 	private String id;
 
+	/** Graphic title. */
+	private String title;
+
 	/** Graphic visibility. */
 	private boolean visible;
 
@@ -99,6 +102,24 @@ public class Graphic implements Serializable {
 	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	/**
+	 * Method to get the graphic title.
+	 * @return
+	 */
+	public String getTitle()
+	{
+		return title;
+	}
+
+	/**
+	 * Method to set the graphic title.
+	 * @param title
+	 */
+	public void setTitle(String title)
+	{
+		this.title = title;
 	}
 
 	/**

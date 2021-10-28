@@ -1688,8 +1688,14 @@ require([
 		// Set the ID property.
 		graphic.id = properties.id;
 
+		// Set a popup title.
+		var title = properties.title;
+		if (!title) {
+			title = properties.id;
+		}
+
 		// Set the default popup template.
-		graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(properties.id);
+		graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
 
 		return graphic;
 	}
