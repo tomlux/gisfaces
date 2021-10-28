@@ -24,6 +24,25 @@
 
 package com.gisfaces.component;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
+import javax.faces.component.FacesComponent;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
+import javax.faces.component.behavior.ClientBehavior;
+import javax.faces.component.behavior.ClientBehaviorContext;
+import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
+
 import com.gisfaces.event.Event;
 import com.gisfaces.event.MapBasemapEvent;
 import com.gisfaces.event.MapClickEvent;
@@ -66,23 +85,6 @@ import com.gisfaces.utilities.StringUtilities;
 import com.gisfaces.utilities.json.JSONException;
 import com.gisfaces.utilities.json.JSONObject;
 import com.gisfaces.utilities.json.JSONVisitor;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
-import javax.faces.component.behavior.ClientBehavior;
-import javax.faces.component.behavior.ClientBehaviorContext;
-import javax.faces.component.behavior.ClientBehaviorHolder;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 /**
  * GIS map custom component using the ESRI ArcGIS JavaScript API.
@@ -665,8 +667,15 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEO_RSS.toString(), jo, i, false));
 				} else if (layer instanceof GraphicsLayer) {
 					if (!context.isPostback()) {
+						// Build a JSON object from the layer.
+						JSONObject jo = new JSONObject((GraphicsLayer) layer, true);
+						this.sanitizeJsonObject(jo);
+
+						// Remove the graphics and manually add after layer creation.
+						jo.remove("graphics");
+
 						// Add new layer.
-						writer.write(String.format("com.gisfaces.addGraphicsLayer('%s', '%s', %s);", layer.getId(), layer.getTitle(), i));
+						writer.write(String.format("com.gisfaces.addGraphicsLayer(%s, %s);", jo, i));
 
 						// Enable sketch widget.
 						if (((GraphicsLayer) layer).isEditable()) {

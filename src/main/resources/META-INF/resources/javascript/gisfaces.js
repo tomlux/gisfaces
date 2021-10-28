@@ -1113,18 +1113,14 @@ require([
 
 	/**
 	 * Function to create and add a new graphics layer.
-	 * @param layerId Layer ID used for later reference.
-	 * @param title Layer title displayed in Legend and LayerList widgets.
+	 * @param properties JSON properties defining layer.
 	 * @param index Layer index.
 	 */
-	com.gisfaces.addGraphicsLayer = function(layerId, title, index) {
-		console.log("Adding graphics layer with id '%s' and title '%s'.", layerId, title);
+	com.gisfaces.addGraphicsLayer = function(properties, index) {
+		console.log("Adding graphics layer with properties '%s'.", JSON.stringify(properties));
 
 		// Create a new graphics layer.
-		var layer = new GraphicsLayer({
-			id: layerId,
-			title: title
-		});
+		var layer = new GraphicsLayer(properties);
 
 		// Set the default popup template.
 		layer.popupTemplate = com.gisfaces.createDefaultPopupTemplate(layer.title);
