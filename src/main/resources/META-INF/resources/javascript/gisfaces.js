@@ -931,6 +931,7 @@ require([
 				com.gisfaces.addGeoRSSLayer(properties, index);
 				break;
 			case "graphics":
+				com.gisfaces.addGraphicsLayer(properties, index);
 				break;
 			case "imagery":
 				com.gisfaces.addImageryLayer(properties, index);

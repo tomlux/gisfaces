@@ -666,17 +666,17 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 
 					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GEO_RSS.toString(), jo, i, false));
 				} else if (layer instanceof GraphicsLayer) {
+					// Build a JSON object from the layer.
+					JSONObject jo = new JSONObject((GraphicsLayer) layer, true);
+					this.sanitizeJsonObject(jo);
+
+					// Remove the graphics and manually add.
+					jo.remove("graphics");
+
+					// Add/update the layer.
+					writer.write(String.format("com.gisfaces.processLayer('%s', %s, %d, %b);", LayerType.GRAPHICS.toString(), jo, i, false));
+
 					if (!context.isPostback()) {
-						// Build a JSON object from the layer.
-						JSONObject jo = new JSONObject((GraphicsLayer) layer, true);
-						this.sanitizeJsonObject(jo);
-
-						// Remove the graphics and manually add after layer creation.
-						jo.remove("graphics");
-
-						// Add new layer.
-						writer.write(String.format("com.gisfaces.addGraphicsLayer(%s, %s);", jo, i));
-
 						// Enable sketch widget.
 						if (((GraphicsLayer) layer).isEditable()) {
 							writer.write(String.format("com.gisfaces.createSketchWidget(com.gisfaces.findLayer('%s'));", layer.getId()));
@@ -689,9 +689,9 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					// Add defined graphics.
 					if (((GraphicsLayer) layer).getGraphics() != null) {
 						for (Graphic g : ((GraphicsLayer) layer).getGraphics()) {
-							JSONObject jo = new JSONObject(g, true);
-							this.sanitizeJsonObject(jo);
-							writer.write(String.format("com.gisfaces.addGraphic('%s', com.gisfaces.createGraphic(%s));", layer.getId(), jo));
+							JSONObject gjo = new JSONObject(g, true);
+							this.sanitizeJsonObject(gjo);
+							writer.write(String.format("com.gisfaces.addGraphic('%s', com.gisfaces.createGraphic(%s));", layer.getId(), gjo));
 						}
 					}
 				} else if (layer instanceof ImageryLayer) {
