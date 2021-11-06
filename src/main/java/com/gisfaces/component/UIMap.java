@@ -681,17 +681,20 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 						if (((GraphicsLayer) layer).isEditable()) {
 							writer.write(String.format("com.gisfaces.createSketchWidget(com.gisfaces.findLayer('%s'));", layer.getId()));
 						}
-					} else {
-						// Remove all existing graphics.
-						writer.write(String.format("com.gisfaces.removeAllGraphics('%s');", layer.getId()));
 					}
 
-					// Add defined graphics.
-					if (((GraphicsLayer) layer).getGraphics() != null) {
-						for (Graphic g : ((GraphicsLayer) layer).getGraphics()) {
-							JSONObject gjo = new JSONObject(g, true);
-							this.sanitizeJsonObject(gjo);
-							writer.write(String.format("com.gisfaces.addGraphic('%s', com.gisfaces.createGraphic(%s));", layer.getId(), gjo));
+					// Process layer graphics only when visible.
+					if (((GraphicsLayer) layer).getVisible()) {
+						// Remove all existing graphics.
+						writer.write(String.format("com.gisfaces.removeAllGraphics('%s');", layer.getId()));
+
+						// Add defined graphics.
+						if (((GraphicsLayer) layer).getGraphics() != null) {
+							for (Graphic g : ((GraphicsLayer) layer).getGraphics()) {
+								JSONObject gjo = new JSONObject(g, true);
+								this.sanitizeJsonObject(gjo);
+								writer.write(String.format("com.gisfaces.addGraphic('%s', com.gisfaces.createGraphic(%s));", layer.getId(), gjo));
+							}
 						}
 					}
 				} else if (layer instanceof ImageryLayer) {
