@@ -99,6 +99,7 @@ require([
 	"esri/widgets/LayerList",
 	"esri/widgets/Legend",
 	"esri/widgets/Locate",
+	"esri/widgets/Measurement",
 	"esri/widgets/Print",
 	"esri/widgets/ScaleBar",
 	"esri/widgets/Search",
@@ -152,6 +153,7 @@ require([
 	LayerList,
 	Legend,
 	Locate,
+	Measurement,
 	Print,
 	ScaleBar,
 	Search,
@@ -730,6 +732,35 @@ require([
 	}
 
 	/**
+	 * Function to create the measurement widget.
+	 */
+	com.gisfaces.createMeasurementWidget = function() {
+		console.log("Creating measurement widget.");
+
+		com.gisfaces.measurement = new Measurement({
+			view: com.gisfaces.view,
+			activeTool: null
+		});
+
+		var expand = new Expand({
+			content: com.gisfaces.measurement,
+			expandIconClass: "esri-icon-measure-area",
+			expandTooltip: "Show Measurement",
+			collapseTooltip: "Hide Measurement"
+		});
+
+		com.gisfaces.view.ui.add(expand, {
+			position: "top-right"
+		});
+
+		// Watch for widget click/expansion.
+		expand.watch("expanded", function(value) {
+			console.log("Measurement widget enabled is '%s'.", value);
+			com.gisfaces.measurement.activeTool = (value) ? "area" : null;
+		});
+	}
+
+	/**
 	 * Function to create all widgets.
 	 */
 	com.gisfaces.createAllWidgets = function() {
@@ -740,6 +771,7 @@ require([
 		com.gisfaces.createBasemapGalleryWidget();
 		com.gisfaces.createLayerListWidget();
 		com.gisfaces.createLegendWidget();
+		com.gisfaces.createMeasurementWidget();
 		com.gisfaces.createTrackWidget();
 		com.gisfaces.createFullscreenWidget();
 		com.gisfaces.createCoordinateWidget();
