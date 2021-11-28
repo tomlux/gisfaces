@@ -605,7 +605,7 @@ require([
 		});
 
 		com.gisfaces.view.ui.add(dimension, {
-			position: "top-right"
+			position: "top-left"
 		});
 
 		// Watch for widget click/expansion.
@@ -737,26 +737,53 @@ require([
 	com.gisfaces.createMeasurementWidget = function() {
 		console.log("Creating measurement widget.");
 
+		var is2d = (com.gisfaces.view.type === "2d");
+
 		com.gisfaces.measurement = new Measurement({
 			view: com.gisfaces.view,
 			activeTool: null
 		});
 
-		var expand = new Expand({
+		var line = new Expand({
 			content: com.gisfaces.measurement,
-			expandIconClass: "esri-icon-measure-area",
-			expandTooltip: "Show Measurement",
-			collapseTooltip: "Hide Measurement"
+			expandIconClass: "esri-icon-measure",
+			expandTooltip: "Show Line Measurement",
+			collapseTooltip: "Hide Line Measurement"
 		});
 
-		com.gisfaces.view.ui.add(expand, {
-			position: "top-right"
+		var area = new Expand({
+			content: com.gisfaces.measurement,
+			expandIconClass: "esri-icon-measure-area",
+			expandTooltip: "Show Area Measurement",
+			collapseTooltip: "Hide Area Measurement"
 		});
 
 		// Watch for widget click/expansion.
-		expand.watch("expanded", function(value) {
-			console.log("Measurement widget enabled is '%s'.", value);
-			com.gisfaces.measurement.activeTool = (value) ? "area" : null;
+		line.watch("expanded", function(value) {
+			console.log("Line measurement widget enabled is '%s'.", value);
+			if (value) {
+				com.gisfaces.measurement.activeTool = (is2d ? "distance" : "direct-line");
+			} else {
+				com.gisfaces.measurement.activeTool = null;
+			}
+		});
+
+		// Watch for widget click/expansion.
+		area.watch("expanded", function(value) {
+			console.log("Area measurement widget enabled is '%s'.", value);
+			if (value) {
+				com.gisfaces.measurement.activeTool = "area";
+			} else {
+				com.gisfaces.measurement.activeTool = null;
+			}
+		});
+
+		com.gisfaces.view.ui.add(line, {
+			position: "top-right"
+		});
+
+		com.gisfaces.view.ui.add(area, {
+			position: "top-right"
 		});
 	}
 
@@ -776,7 +803,6 @@ require([
 		com.gisfaces.createFullscreenWidget();
 		com.gisfaces.createCoordinateWidget();
 		com.gisfaces.createHelpWidget();
-		com.gisfaces.createDimensionWidget();
 		//com.gisfaces.createDirectionsWidget();
 
 		// Create 2d only widgets.
@@ -786,6 +812,8 @@ require([
 			com.gisfaces.createScaleBarWidget();
 			//com.gisfaces.createPrintWidget();
 		}
+
+		com.gisfaces.createDimensionWidget();
 	}
 
 	/**
