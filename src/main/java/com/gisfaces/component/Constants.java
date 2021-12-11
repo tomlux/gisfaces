@@ -34,11 +34,11 @@ import com.gisfaces.model.map.MapType;
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public final class Constants {
-	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.21";
+	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.22";
 	public static final String DEFAULT_PROXY_PAGE = "/proxy/proxy.jsp";
 
 	public static final MapType DEFAULT_TYPE = MapType.THREE_D;
-	public static final Basemap DEFAULT_BASEMAP = Basemap.STREETS;
+	public static final Basemap DEFAULT_BASEMAP = Basemap.STREETS_VECTOR;
 	public static final MapTheme DEFAULT_THEME = MapTheme.LIGHT;
 
 	public static final double DEFAULT_LATITUDE = 39.828175;
