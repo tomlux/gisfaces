@@ -41,6 +41,9 @@ public class GeoRSSLayer extends ScaledLayer implements Serializable {
 	/** Layer URL. */
 	private String url;
 
+	/** Refresh interval in minutes. */
+	private Double refreshInterval;
+
 	/**
 	 * Constructor.
 	 */
@@ -64,5 +67,23 @@ public class GeoRSSLayer extends ScaledLayer implements Serializable {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	/**
+	 * Method to get the refresh interval.
+	 * 
+	 * @return
+	 */
+	public Double getRefreshInterval() {
+		return refreshInterval;
+	}
+
+	/**
+	 * Method to set the refresh interval.
+	 * 
+	 * @param refreshInterval
+	 */
+	public void setRefreshInterval(Double refreshInterval) {
+		this.refreshInterval = refreshInterval;
 	}
 }

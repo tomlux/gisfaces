@@ -38,9 +38,6 @@ public class SceneLayer extends SubLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = -3052639476450878978L;
 
-	/** Layer URL. */
-	private String url;
-
 	/** Portal item. */
 	private PortalItem portalItem;
 
@@ -49,24 +46,6 @@ public class SceneLayer extends SubLayer implements Serializable {
 	 */
 	public SceneLayer() {
 		super();
-	}
-
-	/**
-	 * Method to get the layer URL.
-	 * 
-	 * @return
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Method to set the layer URL.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	/**

@@ -41,6 +41,9 @@ public class SubLayer extends ScaledLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 408037064384224622L;
 
+	/** Layer URL. */
+	private String url;
+
 	/** Layer definition expression. */
 	private String definitionExpression;
 
@@ -74,6 +77,24 @@ public class SubLayer extends ScaledLayer implements Serializable {
 	public SubLayer(String id) {
 		this();
 		this.setId(id);
+	}
+
+	/**
+	 * Method to get the layer URL.
+	 * 
+	 * @return
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+	/**
+	 * Method to set the layer URL.
+	 * 
+	 * @param url
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	/**

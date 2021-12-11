@@ -38,9 +38,6 @@ public class FeatureLayer extends SubLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 3919100529485904927L;
 
-	/** Layer URL. */
-	private String url;
-
 	/** Layer output fields. */
 	private String[] outFields;
 
@@ -64,24 +61,6 @@ public class FeatureLayer extends SubLayer implements Serializable {
 		super();
 		this.setId(id);
 		this.setUrl(url);
-	}
-
-	/**
-	 * Method to get the layer URL.
-	 * 
-	 * @return
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Method to set the layer URL.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	/**

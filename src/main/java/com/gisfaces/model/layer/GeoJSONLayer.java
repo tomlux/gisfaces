@@ -38,35 +38,17 @@ public class GeoJSONLayer extends SubLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 8456952489945269543L;
 
-	/** Layer URL. */
-	private String url;
-
 	/** Copyright attribution. */
 	private String copyright;
+
+	/** Refresh interval in minutes. */
+	private Double refreshInterval;
 
 	/**
 	 * Constructor.
 	 */
 	public GeoJSONLayer() {
 		super();
-	}
-
-	/**
-	 * Method to get the layer URL.
-	 * 
-	 * @return
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Method to set the layer URL.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	/**
@@ -85,5 +67,23 @@ public class GeoJSONLayer extends SubLayer implements Serializable {
 	 */
 	public void setCopyright(String copyright) {
 		this.copyright = copyright;
+	}
+
+	/**
+	 * Method to get the refresh interval.
+	 * 
+	 * @return
+	 */
+	public Double getRefreshInterval() {
+		return refreshInterval;
+	}
+
+	/**
+	 * Method to set the refresh interval.
+	 * 
+	 * @param refreshInterval
+	 */
+	public void setRefreshInterval(Double refreshInterval) {
+		this.refreshInterval = refreshInterval;
 	}
 }

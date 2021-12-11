@@ -38,9 +38,6 @@ public class StreamLayer extends SubLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = 6000981135248757493L;
 
-	/** Layer URL. */
-	private String url;
-
 	/** Purge options. */
 	private StreamLayerPurgeOptions purgeOptions;
 
@@ -61,24 +58,6 @@ public class StreamLayer extends SubLayer implements Serializable {
 		super();
 		this.setId(id);
 		this.setUrl(url);
-	}
-
-	/**
-	 * Method to get the layer URL.
-	 * 
-	 * @return
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Method to set the layer URL.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	/**

@@ -38,9 +38,6 @@ public class ImageryLayer extends SubLayer implements Serializable {
 	/** Serial Version UID. */
 	private static final long serialVersionUID = -8386758702295403695L;
 
-	/** Layer URL. */
-	private String url;
-
 	/** Image format type. */
 	private String format;
 
@@ -52,24 +49,6 @@ public class ImageryLayer extends SubLayer implements Serializable {
 	 */
 	public ImageryLayer() {
 		super();
-	}
-
-	/**
-	 * Method to get the layer URL.
-	 * 
-	 * @return
-	 */
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * Method to set the layer URL.
-	 * 
-	 * @param url
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	/**
