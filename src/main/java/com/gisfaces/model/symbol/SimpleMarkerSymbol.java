@@ -29,6 +29,7 @@ import java.io.Serializable;
 
 /**
  * Simple marker symbol class.
+ * <p>Note: The style and path properties are mutually exclusive.
  * 
  * @author Chris Duncan (cduncan@gisfaces.com)
  * @see <a href=
@@ -92,6 +93,9 @@ public class SimpleMarkerSymbol extends MarkerSymbol implements Serializable {
 	 */
 	public void setStyle(String style) {
 		this.style = style;
+
+		// The style and path properties are mutually exclusive.
+		this.path = null;
 	}
 
 	/**
@@ -110,6 +114,9 @@ public class SimpleMarkerSymbol extends MarkerSymbol implements Serializable {
 	 */
 	public void setPath(String path) {
 		this.path = path;
+
+		// The style and path properties are mutually exclusive.
+		this.style = null;
 	}
 
 	/**
