@@ -34,7 +34,7 @@ import com.gisfaces.model.map.MapDimension;
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public final class Constants {
-	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.22";
+	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.23";
 	public static final String DEFAULT_PROXY_PAGE = "/proxy/proxy.jsp";
 
 	public static final MapDimension DEFAULT_DIMENSION = MapDimension.THREE_D;
