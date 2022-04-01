@@ -40,7 +40,7 @@ public class MapModel implements Serializable {
 	private static final long serialVersionUID = 6173025415833761651L;
 
 	/** Map type. */
-	private MapType mapType;
+	private MapDimension mapDimension;
 
 	/** Map theme. */
 	private MapTheme mapTheme;
@@ -65,7 +65,7 @@ public class MapModel implements Serializable {
 	 */
 	public MapModel() {
 		super();
-		this.mapType = Constants.DEFAULT_TYPE;
+		this.mapDimension = Constants.DEFAULT_DIMENSION;
 		this.basemap = Constants.DEFAULT_BASEMAP;
 		this.mapTheme = Constants.DEFAULT_THEME;
 		this.viewpoint = new Viewpoint();
@@ -74,21 +74,21 @@ public class MapModel implements Serializable {
 	}
 
 	/**
-	 * Method to get the map type.
+	 * Method to get the map dimension.
 	 * 
 	 * @return
 	 */
-	public MapType getMapType() {
-		return mapType;
+	public MapDimension getMapDimension() {
+		return mapDimension;
 	}
 
 	/**
-	 * Method to set the map type.
+	 * Method to set the map dimension.
 	 * 
-	 * @param mapType
+	 * @param mapDimension
 	 */
-	public void setMapType(MapType mapType) {
-		this.mapType = mapType;
+	public void setMapDimension(MapDimension mapDimension) {
+		this.mapDimension = mapDimension;
 	}
 
 	/**

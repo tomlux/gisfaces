@@ -217,6 +217,14 @@ require([
 	}
 
 	/**
+	 * Function to add an application listener on a map dimension update.
+	 * The map dimension event will be passed to the listener.
+	 */
+	com.gisfaces.addMapDimensionListener = function(f) {
+		com.gisfaces.mapDimensionListener = f;
+	}
+
+	/**
 	 * Function to add an application listener on a map geolocation event.
 	 * The geolocation event will be passed to the listener.
 	 */
@@ -632,6 +640,11 @@ require([
 
 			// Restore properties.
 			com.gisfaces.view.viewpoint = viewpoint;
+
+			// Invoke registered listener.
+			if (com.gisfaces.mapDimensionListener) {
+				com.gisfaces.mapDimensionListener(com.gisfaces.view);
+			}
 
 			// Add view listeners once the view has completely loaded.
 			com.gisfaces.view.when(function(instance) {

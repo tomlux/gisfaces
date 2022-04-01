@@ -46,6 +46,7 @@ import javax.faces.context.ResponseWriter;
 import com.gisfaces.event.Event;
 import com.gisfaces.event.MapBasemapEvent;
 import com.gisfaces.event.MapClickEvent;
+import com.gisfaces.event.MapDimensionEvent;
 import com.gisfaces.event.MapExtentEvent;
 import com.gisfaces.event.MapGeoLocationEvent;
 import com.gisfaces.event.MapGraphicCreateEvent;
@@ -78,8 +79,8 @@ import com.gisfaces.model.layer.WMSLayer;
 import com.gisfaces.model.layer.WMTSLayer;
 import com.gisfaces.model.map.Basemap;
 import com.gisfaces.model.map.Configuration;
+import com.gisfaces.model.map.MapDimension;
 import com.gisfaces.model.map.MapModel;
-import com.gisfaces.model.map.MapType;
 import com.gisfaces.utilities.ComponentUtilities;
 import com.gisfaces.utilities.StringUtilities;
 import com.gisfaces.utilities.json.JSONException;
@@ -119,8 +120,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 	 */
 	@Override
 	public Collection<String> getEventNames() {
-		return Arrays.asList(Event.BASEMAP.toString(), Event.CLICK.toString(), Event.EXTENT.toString(), Event.SELECT.toString(), Event.GEOLOCATION.toString(),
-				Event.GRAPHICCREATE.toString(), Event.GRAPHICUPDATE.toString(), Event.GRAPHICDELETE.toString());
+		return Arrays.asList(Event.BASEMAP.toString(), Event.CLICK.toString(), Event.EXTENT.toString(), Event.SELECT.toString(), Event.DIMENSION.toString(),
+				Event.GEOLOCATION.toString(), Event.GRAPHICCREATE.toString(), Event.GRAPHICUPDATE.toString(), Event.GRAPHICDELETE.toString());
 	}
 
 	/*
@@ -282,6 +283,29 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 						queueEvent(event);
 					}
 				}
+			} else if (Event.DIMENSION.toString().equals(name)) {
+				// Check for registered event listeners.
+				List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.DIMENSION.toString());
+				if ((behaviors != null) && !behaviors.isEmpty()) {
+					// Get the request parameters.
+					String dimension = params.get("gisfaces.dimension");
+
+					// Set the new values in the managed bean.
+					MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+					if (model != null) {
+						model.setMapDimension(MapDimension.getMapDimensionByValue(dimension));
+					}
+
+					// Send an event to all registered listeners.
+					for (ClientBehavior behavior : behaviors) {
+						// Create the custom map event.
+						MapDimensionEvent event = new MapDimensionEvent(this, behavior);
+						event.setDimension(MapDimension.getMapDimensionByValue(dimension));
+
+						// Send the event.
+						queueEvent(event);
+					}
+				}
 			} else if (Event.GEOLOCATION.toString().equals(name)) {
 				// Get the request parameters.
 				String timestamp = params.get("gisfaces.timestamp");
@@ -427,7 +451,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 		}
 
 		// 3D indicator.
-		boolean is3d = MapType.THREE_D.equals(model.getMapType());
+		boolean is3d = MapDimension.THREE_D.equals(model.getMapDimension());
 
 		// Get the component client ID.
 		String clientId = this.getClientId();
@@ -548,6 +572,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 			writer.write("com.gisfaces.addMapClickListener(com.gisfaces.generateJsfMapClickEvent);");
 			writer.write("com.gisfaces.addMapExtentListener(com.gisfaces.generateJsfMapExtentEvent);");
 			writer.write("com.gisfaces.addMapSelectListener(com.gisfaces.generateJsfMapSelectEvent);");
+			writer.write("com.gisfaces.addMapDimensionListener(com.gisfaces.generateJsfMapDimensionEvent);");
 			writer.write("com.gisfaces.addMapGeoLocationListener(com.gisfaces.generateJsfMapGeoLocationEvent);");
 			writer.write("com.gisfaces.addMapGraphicCreateListener(com.gisfaces.generateJsfMapGraphicCreateEvent);");
 			writer.write("com.gisfaces.addMapGraphicUpdateListener(com.gisfaces.generateJsfMapGraphicUpdateEvent);");
@@ -560,6 +585,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 			this.encodeJsfMapClickFunction(context, this, writer);
 			this.encodeJsfMapExtentFunction(context, this, writer);
 			this.encodeJsfMapSelectFunction(context, this, writer);
+			this.encodeJsfMapDimensionFunction(context, this, writer);
 			this.encodeJsfMapGeoLocationFunction(context, this, writer);
 			this.encodeJsfMapGraphicCreateFunction(context, this, writer);
 			this.encodeJsfMapGraphicUpdateFunction(context, this, writer);
@@ -973,6 +999,45 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
 				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.SELECT.toString(), this.getClientId(),
+						parameters);
+				String script = behavior.getScript(cbc);
+
+				// Remove extraneous parameter value quotes.
+				script = ComponentUtilities.removeScriptParameterValueQuotes(script, parameters);
+
+				// Generate the ajax script.
+				writer.write(script + ";");
+			}
+		}
+
+		writer.write("};");
+	}
+
+	/**
+	 * Method to encode the function which generates a JSF map dimension AJAX event.
+	 * 
+	 * @param context   FacesContext
+	 * @param component UIComponent
+	 * @param writer    ResponseWriter
+	 * @throws IOException
+	 */
+	private void encodeJsfMapDimensionFunction(FacesContext context, UIComponent component, ResponseWriter writer) throws IOException {
+		writer.write("com.gisfaces.generateJsfMapDimensionEvent = function(view) {");
+
+		// Get the list of client behavior event listeners specified.
+		List<ClientBehavior> behaviors = this.getClientBehaviors().get(Event.DIMENSION.toString());
+
+		if ((behaviors != null) && !behaviors.isEmpty()) {
+			writer.write("var event = null;");
+
+			// Add parameters for decode.
+			List<ClientBehaviorContext.Parameter> parameters = new ArrayList<ClientBehaviorContext.Parameter>();
+			parameters.add(new ClientBehaviorContext.Parameter("gisfaces.dimension", "view.type"));
+
+			// Generate an event for registered listeners.
+			for (ClientBehavior behavior : behaviors) {
+				// Generate the callback script.
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.DIMENSION.toString(), this.getClientId(),
 						parameters);
 				String script = behavior.getScript(cbc);
 

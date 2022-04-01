@@ -29,11 +29,11 @@ import java.util.List;
 import javax.faces.model.SelectItem;
 
 /**
- * Map type enum class.
+ * Map dimennsion enum class.
  * 
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
-public enum MapType {
+public enum MapDimension {
 	TWO_D("2d", "2D"), THREE_D("3d", "3D");
 
 	/** Value. */
@@ -48,7 +48,7 @@ public enum MapType {
 	 * @param value Value.
 	 * @param title Title.
 	 */
-	MapType(String value, String title) {
+	MapDimension(String value, String title) {
 		this.value = value;
 		this.title = title;
 	}
@@ -72,6 +72,22 @@ public enum MapType {
 	}
 
 	/**
+	 * Method to get the enum by the specified value.
+	 * 
+	 * @param value Value
+	 * @return MapDimension if found, <code>null</code> otherwise.
+	 */
+	public static final MapDimension getMapDimensionByValue(String value) {
+		for (MapDimension d : MapDimension.values()) {
+			if (d.getValue().equalsIgnoreCase(value)) {
+				return d;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Method to get the enum select items.
 	 * 
 	 * @return List of SelectItem objects.
@@ -79,8 +95,8 @@ public enum MapType {
 	public static final List<SelectItem> getSelectItems() {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 
-		for (MapType b : MapType.values()) {
-			items.add(new SelectItem(b.getValue(), b.getTitle(), b.getTitle()));
+		for (MapDimension d : MapDimension.values()) {
+			items.add(new SelectItem(d.getValue(), d.getTitle(), d.getTitle()));
 		}
 
 		return items;

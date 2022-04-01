@@ -26,7 +26,7 @@ package com.gisfaces.component;
 
 import com.gisfaces.model.map.Basemap;
 import com.gisfaces.model.map.MapTheme;
-import com.gisfaces.model.map.MapType;
+import com.gisfaces.model.map.MapDimension;
 
 /**
  * Constants class.
@@ -37,7 +37,7 @@ public final class Constants {
 	public static final String DEFAULT_JSAPI = "https://js.arcgis.com/4.22";
 	public static final String DEFAULT_PROXY_PAGE = "/proxy/proxy.jsp";
 
-	public static final MapType DEFAULT_TYPE = MapType.THREE_D;
+	public static final MapDimension DEFAULT_DIMENSION = MapDimension.THREE_D;
 	public static final Basemap DEFAULT_BASEMAP = Basemap.STREETS_VECTOR;
 	public static final MapTheme DEFAULT_THEME = MapTheme.LIGHT;
 

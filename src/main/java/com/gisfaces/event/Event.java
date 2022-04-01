@@ -30,7 +30,15 @@ package com.gisfaces.event;
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public enum Event {
-	BASEMAP, CLICK, EXTENT, SELECT, GEOLOCATION, GRAPHICCREATE, GRAPHICUPDATE, GRAPHICDELETE;
+	BASEMAP,
+	CLICK,
+	EXTENT,
+	SELECT,
+	DIMENSION,
+	GEOLOCATION,
+	GRAPHICCREATE,
+	GRAPHICUPDATE,
+	GRAPHICDELETE;
 
 	@Override
 	public String toString() {
