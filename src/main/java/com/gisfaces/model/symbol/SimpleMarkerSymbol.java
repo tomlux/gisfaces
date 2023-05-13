@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,8 @@ import java.io.Serializable;
 
 /**
  * Simple marker symbol class.
- * <p>Note: The style and path properties are mutually exclusive.
+ * <p>
+ * Note: The style and path properties are mutually exclusive.
  * 
  * @author Chris Duncan (cduncan@gisfaces.com)
  * @see <a href=

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,12 @@
 
 package com.gisfaces.event;
 
+import com.gisfaces.model.map.MapDimension;
 import javax.faces.component.UIComponent;
 import javax.faces.component.behavior.Behavior;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.AjaxBehaviorListener;
 import javax.faces.event.FacesListener;
-
-import com.gisfaces.model.map.MapDimension;
 
 /**
  * Map dimension AJAX behavior event.
@@ -87,6 +86,7 @@ public class MapDimensionEvent extends AjaxBehaviorEvent {
 
 	/**
 	 * Method to set the map dimension.
+	 * 
 	 * @param dimension
 	 */
 	public void setDimension(MapDimension dimension) {

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,6 @@
  */
 
 package com.gisfaces.component;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.faces.application.ResourceDependencies;
-import javax.faces.application.ResourceDependency;
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIComponentBase;
-import javax.faces.component.behavior.ClientBehavior;
-import javax.faces.component.behavior.ClientBehaviorContext;
-import javax.faces.component.behavior.ClientBehaviorHolder;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 
 import com.gisfaces.event.Event;
 import com.gisfaces.event.MapBasemapEvent;
@@ -86,6 +67,23 @@ import com.gisfaces.utilities.StringUtilities;
 import com.gisfaces.utilities.json.JSONException;
 import com.gisfaces.utilities.json.JSONObject;
 import com.gisfaces.utilities.json.JSONVisitor;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import javax.faces.application.ResourceDependencies;
+import javax.faces.application.ResourceDependency;
+import javax.faces.component.FacesComponent;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIComponentBase;
+import javax.faces.component.behavior.ClientBehavior;
+import javax.faces.component.behavior.ClientBehaviorContext;
+import javax.faces.component.behavior.ClientBehaviorHolder;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.context.ResponseWriter;
 
 /**
  * GIS map custom component using the ESRI ArcGIS JavaScript API.
@@ -1037,8 +1035,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 			// Generate an event for registered listeners.
 			for (ClientBehavior behavior : behaviors) {
 				// Generate the callback script.
-				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.DIMENSION.toString(), this.getClientId(),
-						parameters);
+				ClientBehaviorContext cbc = ClientBehaviorContext.createClientBehaviorContext(context, component, Event.DIMENSION.toString(),
+						this.getClientId(), parameters);
 				String script = behavior.getScript(cbc);
 
 				// Remove extraneous parameter value quotes.

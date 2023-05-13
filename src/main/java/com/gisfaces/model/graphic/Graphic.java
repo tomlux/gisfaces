@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,19 +106,19 @@ public class Graphic implements Serializable {
 
 	/**
 	 * Method to get the graphic title.
+	 * 
 	 * @return
 	 */
-	public String getTitle()
-	{
+	public String getTitle() {
 		return title;
 	}
 
 	/**
 	 * Method to set the graphic title.
+	 * 
 	 * @param title
 	 */
-	public void setTitle(String title)
-	{
+	public void setTitle(String title) {
 		this.title = title;
 	}
 

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +30,7 @@ package com.gisfaces.event;
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public enum Event {
-	BASEMAP,
-	CLICK,
-	EXTENT,
-	SELECT,
-	DIMENSION,
-	GEOLOCATION,
-	GRAPHICCREATE,
-	GRAPHICUPDATE,
-	GRAPHICDELETE;
+	BASEMAP, CLICK, EXTENT, SELECT, DIMENSION, GEOLOCATION, GRAPHICCREATE, GRAPHICUPDATE, GRAPHICDELETE;
 
 	@Override
 	public String toString() {

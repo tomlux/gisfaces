@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013-2021 Chris Duncan (cduncan@gisfaces.com)
+ * Copyright (c) 2013-2023 Chris Duncan (cduncan@gisfaces.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@
 package com.gisfaces.component;
 
 import com.gisfaces.model.map.Basemap;
-import com.gisfaces.model.map.MapTheme;
 import com.gisfaces.model.map.MapDimension;
+import com.gisfaces.model.map.MapTheme;
 
 /**
  * Constants class.
