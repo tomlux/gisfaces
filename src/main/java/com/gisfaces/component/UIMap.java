@@ -152,9 +152,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 	public void decode(FacesContext context) {
 		String clientId = this.getClientId();
 
-		if (ComponentUtilities.isComponentRequest(context, clientId))
-			;
-		{
+		if (ComponentUtilities.isComponentRequest(context, clientId)) {
+			// Get the request parameters.
 			Map<String, String> params = context.getExternalContext().getRequestParameterMap();
 
 			// Get the ajax behavior event name.
