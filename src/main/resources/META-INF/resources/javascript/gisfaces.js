@@ -427,10 +427,15 @@ require([
 
 		// Attach a watch listener to the basemap gallery.
 		watchUtils.watch(com.gisfaces.basemapGallery, "activeBasemap", function(basemap) {
-			console.log("Basemap updated to '%s'.", basemap.title);
+			// Validate basemap before processing.
+			// The basemap gallery widget sometimes sends a basemap title "Basemap".
+			// The only useful basemap property is title.
+			if (basemap.title !== "Basemap") {
+				console.log("Basemap updated to '%s'.", basemap.title);
 
-			if (com.gisfaces.mapBasemapListener) {
-				com.gisfaces.mapBasemapListener(basemap.title);
+				if (com.gisfaces.mapBasemapListener) {
+					com.gisfaces.mapBasemapListener(basemap.title);
+				}
 			}
 		});
 	}
