@@ -171,7 +171,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					if (b == null) {
 						// Set a default basemap since there are several basemaps in the basemap gallery
 						// do not have a well known name.
-						b = Basemap.STREETS;
+						b = Constants.DEFAULT_BASEMAP;
 					}
 
 					// Set the new values in the managed bean.
