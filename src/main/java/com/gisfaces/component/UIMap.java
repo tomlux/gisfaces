@@ -166,8 +166,8 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					// Get the request parameters.
 					String title = params.get("gisfaces.basemap.title");
 
-					// Get the basemap enum based on the title.
-					Basemap b = Basemap.getBasemapByTitle(title);
+					// Get the basemap enum based.
+					Basemap b = Basemap.getBasemap(title);
 					if (b == null) {
 						// Set a default basemap since there are several basemaps in the basemap gallery
 						// do not have a well known name.
@@ -540,10 +540,10 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					// Encode the map.
 					// 3d map ground layer "world-topobathymetry" uses "world-elevation" for land
 					// and includes oceans.
-					writer.write(String.format("com.gisfaces.createMap('%s', 'world-topobathymetry');", model.getBasemap().getValue()));
+					writer.write(String.format("com.gisfaces.createMap('%s', 'world-topobathymetry');", model.getBasemap().getId()));
 				} else {
 					// Encode the 2d map.
-					writer.write(String.format("com.gisfaces.createMap('%s', null);", model.getBasemap().getValue()));
+					writer.write(String.format("com.gisfaces.createMap('%s', null);", model.getBasemap().getId()));
 				}
 			}
 
@@ -596,7 +596,7 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					model.getViewpoint().getZoom()));
 
 			// Update the map basemap layer.
-			writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getValue()));
+			writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getId()));
 
 			// Encode all map layers.
 			this.encodeMapLayers(context, this, writer, model);

@@ -37,98 +37,48 @@ import javax.faces.model.SelectItem;
  *      Basemaps</a>
  */
 public enum Basemap {
-	STREETS("streets", "Streets", 24, "This worldwide street map presents highway-level data for the world.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/streets.jpg", false),
-	SATELLITE("satellite", "Imagery", 24,
-			"World Imagery provides one meter or better satellite and aerial imagery in many parts of the world and lower resolution satellite imagery worldwide.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/satellite.jpg", false),
-	HYBRID("hybrid", "Imagery with Labels", 24,
-			" This map presents country boundaries, first order (State/Province) internal administrative boundaries for most countries, second order administrative boundaries for the United States (counties) and some countries in Europe, and place names for the world.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/hybrid.jpg", false),
-	TOPOGRAPHIC("topo", "Topographic", 24, "This map is designed to be used as a basemap by GIS professionals and as a reference map by anyone.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/topo.jpg", false),
-	LIGHTGRAY("gray", "Light Gray Canvas", 24,
-			"This map draws attention to your thematic content by providing a neutral background with minimal colors, labels, and features.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/gray.jpg", false),
-	DARKGRAY("dark-gray", "Dark Gray Canvas", 24,
-			"This map draws attention to your thematic content by providing a neutral background with minimal colors, labels, and features.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/dark-gray.jpg", false),
-	OSM("osm", "OpenStreetMap", 20, "The OpenStreetMap is a community map layer that is designed to be used as a basemap for various maps and applications.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/osm.jpg", false),
-	OCEANS("oceans", "Oceans", 17, " This map service is designed to be used as the reference layer for the ocean base map.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/oceans.jpg", false),
-	NATGEO("national-geographic", "National Geographic", 17,
-			"This map is designed to be used as a general reference map for informational and educational purposes as well as a base map by GIS professionals and other users for creating web maps and web mapping applications.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/national-geographic.jpg", false),
-	TERRAIN("terrain", "Terrain with Labels", 14,
-			"This map is designed to be used as a base map by GIS professionals to overlay other thematic layers such as demographics or land cover.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/terrain.jpg", false),
-	STREETS_VECTOR("streets-vector", "Streets (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a classic Esri street map style.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/streets.jpg", true),
-	STREETS_NIGHT_VECTOR("streets-night-vector", "Streets Night (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a custom 'night time' street map style.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/streets-night.jpg", true),
-	STREETS_NAVIGATION_VECTOR("streets-navigation-vector", "Streets Navigation (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a custom navigation map style.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/streets-navigation.jpg", true),
-	STREETS_RELIEF_VECTOR("streets-relief-vector", "Streets Relief (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a classic Esri street map style designed for use with a relief map.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/streets-relief.jpg", true),
-	TOPOGRAPHIC_VECTOR("topo-vector", "Topographic (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a classic Esri topographic map style designed for use with a relief map.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/topo.jpg", true),
-	LIGHTGRAY_VECTOR("gray-vector", "Light Gray Canvas (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a light neutral background style with minimal colors, labels, and features.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/gray.jpg", true),
-	DARKGRAY_VECTOR("dark-gray-vector", "Dark Gray Canvas (Vector)", 23,
-			"This vector tile layer provides a detailed basemap for the world featuring a dark neutral background style with minimal colors, labels, and features.",
-			"https://developers.arcgis.com/javascript/assets/img/apiref/basemap/dark-gray.jpg", true);
+	STREETS("streets", "Streets"),
+	SATELLITE("satellite", "Imagery"),
+	HYBRID("hybrid", "Imagery with Labels"),
+	TOPOGRAPHIC("topo", "Topographic"),
+	LIGHTGRAY("gray", "Light Gray Canvas"),
+	DARKGRAY("dark-gray", "Dark Gray Canvas"),
+	OSM("osm", "OpenStreetMap"),
+	OCEANS("oceans", "Oceans"),
+	NATGEO("national-geographic", "National Geographic"),
+	TERRAIN("terrain", "Terrain with Labels"),
+	STREETS_VECTOR("streets-vector", "Streets (Vector)"),
+	STREETS_NIGHT_VECTOR("streets-night-vector", "Streets Night (Vector)"),
+	STREETS_NAVIGATION_VECTOR("streets-navigation-vector", "Streets Navigation (Vector)"),
+	STREETS_RELIEF_VECTOR("streets-relief-vector", "Streets Relief (Vector)"),
+	TOPOGRAPHIC_VECTOR("topo-vector", "Topographic (Vector)"),
+	LIGHTGRAY_VECTOR("gray-vector", "Light Gray Canvas (Vector)"),
+	DARKGRAY_VECTOR("dark-gray-vector", "Dark Gray Canvas (Vector)");
 
-	/** Value. */
-	private String value;
+	/** ID. */
+	private String id;
 
 	/** Title. */
 	private String title;
 
-	/** Levels of detail. */
-	private int lods;
-
-	/** Description. */
-	private String description;
-
-	/** Thumbnail url. */
-	private String thumbnail;
-
-	/** Vector indicator. */
-	private boolean vector;
-
 	/**
 	 * Constructor. Package scope required for enum constructors.
 	 * 
-	 * @param value       Value.
+	 * @param id          ID.
 	 * @param title       Title.
-	 * @param lods        Levels of detail.
-	 * @param description Description.
-	 * @param thumbnail   Thumbnail URL.
-	 * @param vector      Vector indicator.
 	 */
-	Basemap(String value, String title, int lods, String description, String thumbnail, boolean vector) {
-		this.value = value;
+	Basemap(String id, String title) {
+		this.id = id;
 		this.title = title;
-		this.lods = lods;
-		this.description = description;
-		this.thumbnail = thumbnail;
-		this.vector = vector;
 	}
 
 	/**
-	 * Method to get the basemap value.
+	 * Method to get the basemap id.
 	 * 
-	 * @return Basemap value.
+	 * @return Basemap id.
 	 */
-	public String getValue() {
-		return value;
+	public String getId() {
+		return id;
 	}
 
 	/**
@@ -141,50 +91,14 @@ public enum Basemap {
 	}
 
 	/**
-	 * Method to get the number of basemap LODs.
+	 * Method to get the enum.
 	 * 
-	 * @return Number of basemap LODs.
-	 */
-	public int getLods() {
-		return lods;
-	}
-
-	/**
-	 * Method to get the basemap description.
-	 * 
-	 * @return Basemap description.
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * Method to get the basemap thumb-nail image.
-	 * 
-	 * @return Basemap thumb-nail image.
-	 */
-	public String getThumbnail() {
-		return thumbnail;
-	}
-
-	/**
-	 * Method to get the basemap vector indicator.
-	 * 
-	 * @return
-	 */
-	public boolean isVector() {
-		return vector;
-	}
-
-	/**
-	 * Method to get the enum by the specified title.
-	 * 
-	 * @param title Title
+	 * @param value Value
 	 * @return Basemap if found, <code>null</code> otherwise.
 	 */
-	public static final Basemap getBasemapByTitle(String title) {
+	public static final Basemap getBasemap(String value) {
 		for (Basemap b : Basemap.values()) {
-			if (b.getTitle().equalsIgnoreCase(title)) {
+			if (b.getId().equalsIgnoreCase(value) || b.getTitle().equalsIgnoreCase(value)) {
 				return b;
 			}
 		}
@@ -201,8 +115,7 @@ public enum Basemap {
 		List<SelectItem> items = new ArrayList<SelectItem>();
 
 		for (Basemap b : Basemap.values()) {
-			String description = String.format("%s Contains %d levels of detail.", b.getDescription(), b.getLods());
-			items.add(new SelectItem(b.getValue(), b.getTitle(), description));
+			items.add(new SelectItem(b.getId(), b.getTitle()));
 		}
 
 		return items;
