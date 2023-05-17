@@ -53,6 +53,7 @@ require(["dojo/ready"], function(ready) {
 
 // Create the map functions using the ESRI JavaScript library.
 require([
+	"esri/Basemap",
 	"esri/Color",
 	"esri/config",
 	"esri/Graphic",
@@ -107,6 +108,7 @@ require([
 	"esri/widgets/Track",
 	"dojo/domReady!"
 ], function(
+	Basemap,
 	Color,
 	esriConfig,
 	Graphic,
@@ -948,14 +950,21 @@ require([
 	}
 
 	/**
-	 * Function to set the map basemap. Note: there is a basemap gallery widget.
-	 * @param basemap Must be "streets", "satellite", "hybrid", "topo", "gray", "dark-gray", "oceans", "national-geographic", "terrain", "osm", "dark-gray-vector", "gray-vector", "streets-vector", "topo-vector", "streets-night-vector", "streets-relief-vector", "streets-navigation-vector".
+	 * Function to set the map basemap.
+	 * @param id Well known basemap ID.
+	 * @see https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap
 	 */
-	com.gisfaces.setMapBasemap = function(basemap) {
-		console.log("Setting map basemap to '%s'.", basemap);
+	com.gisfaces.setMapBasemap = function(id) {
+		// Get validated basemap.
+		var basemap = Basemap.fromId(id);
 
-		if (com.gisfaces.map) {
-			com.gisfaces.map.basemap = basemap;
+		if (basemap) {
+			if (com.gisfaces.map) {
+				console.log("Setting map basemap to '%s'.", id);
+				com.gisfaces.map.basemap = basemap;
+			}
+		} else {
+			console.log("Basemap '%s' was not found.", id);
 		}
 	}
 
