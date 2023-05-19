@@ -166,28 +166,28 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					// Get the request parameters.
 					String title = params.get("gisfaces.basemap.title");
 
-					// Get the basemap enum based.
+					// Get the basemap based on the title, if possible.
+					// The Basemap Gallery widget only sends a basemap title.
+					// The map basemap must be set using a valid basemap ID, however.
+					// The documentation does not explicitly map basemap IDs to titles.
+					// Basemaps are free or licensed. Licensed basemaps cannot be set manually without login.
 					Basemap b = Basemap.getBasemap(title);
-					if (b == null) {
-						// Set a default basemap since there are several basemaps in the basemap gallery
-						// do not have a well known name.
-						b = Constants.DEFAULT_BASEMAP;
-					}
+					if (b != null) {
+						// Set the new values in the managed bean.
+						MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
+						if (model != null) {
+							model.setBasemap(b);
+						}
 
-					// Set the new values in the managed bean.
-					MapModel model = (MapModel) ComponentUtilities.getObjectAttribute(this, Constants.ATTRIBUTE_MODEL);
-					if (model != null) {
-						model.setBasemap(b);
-					}
+						// Send an event to all registered listeners.
+						for (ClientBehavior behavior : behaviors) {
+							// Create the custom map event.
+							MapBasemapEvent event = new MapBasemapEvent(this, behavior);
+							event.setBasemapTitle(title);
 
-					// Send an event to all registered listeners.
-					for (ClientBehavior behavior : behaviors) {
-						// Create the custom map event.
-						MapBasemapEvent event = new MapBasemapEvent(this, behavior);
-						event.setBasemapTitle(title);
-
-						// Send the event.
-						queueEvent(event);
+							// Send the event.
+							queueEvent(event);
+						}
 					}
 				}
 			} else if (Event.CLICK.toString().equals(name)) {
@@ -596,7 +596,9 @@ public class UIMap extends UIComponentBase implements ClientBehaviorHolder {
 					model.getViewpoint().getZoom()));
 
 			// Update the map basemap layer.
-			writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getId()));
+			// The BasemapGallery widget sends a basemap title and not ID necessary to update correctly.
+			// The decode() method saves the basemap based upon title, if possible.
+			//writer.write(String.format("com.gisfaces.setMapBasemap('%s');", model.getBasemap().getId()));
 
 			// Encode all map layers.
 			this.encodeMapLayers(context, this, writer, model);
