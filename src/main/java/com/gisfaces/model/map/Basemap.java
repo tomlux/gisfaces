@@ -37,23 +37,18 @@ import javax.faces.model.SelectItem;
  *      Basemaps</a>
  */
 public enum Basemap {
-	STREETS("streets", "Streets"),
 	SATELLITE("satellite", "Imagery"),
-	HYBRID("hybrid", "Imagery with Labels"),
-	TOPOGRAPHIC("topo", "Topographic"),
-	LIGHTGRAY("gray", "Light Gray Canvas"),
-	DARKGRAY("dark-gray", "Dark Gray Canvas"),
-	OSM("osm", "OpenStreetMap"),
+	HYBRID("hybrid", "Imagery Hybrid"),
+	STREETS_VECTOR("streets-vector", "Streets"),
+	TOPO_VECTOR("topo-vector", "Topographic"),
+	STREETS_NAVIGATION_VECTOR("streets-navigation-vector", "Navigation"),
+	STREETS_NIGHT_VECTOR("streets-night-vector", "Streets (Night)"),
+	STREETS_RELIEF_VECTOR("streets-relief-vector", "Terrain with Labels"),
+	GRAY_VECTOR("gray-vector", "Light Gray Canvas"),
+	DARK_GRAY_VECTOR("dark-gray-vector", "Dark Gray Canvas"),
 	OCEANS("oceans", "Oceans"),
-	NATGEO("national-geographic", "National Geographic"),
-	TERRAIN("terrain", "Terrain with Labels"),
-	STREETS_VECTOR("streets-vector", "Streets (Vector)"),
-	STREETS_NIGHT_VECTOR("streets-night-vector", "Streets Night (Vector)"),
-	STREETS_NAVIGATION_VECTOR("streets-navigation-vector", "Streets Navigation (Vector)"),
-	STREETS_RELIEF_VECTOR("streets-relief-vector", "Streets Relief (Vector)"),
-	TOPOGRAPHIC_VECTOR("topo-vector", "Topographic (Vector)"),
-	LIGHTGRAY_VECTOR("gray-vector", "Light Gray Canvas (Vector)"),
-	DARKGRAY_VECTOR("dark-gray-vector", "Dark Gray Canvas (Vector)");
+	NATIONAL_GEOGRAPHIC("national-geographic", "National Geographic Style Map"),
+	OSM("osm", "OpenStreetMap");
 
 	/** ID. */
 	private String id;
