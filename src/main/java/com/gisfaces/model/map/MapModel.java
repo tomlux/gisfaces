@@ -60,6 +60,9 @@ public class MapModel implements Serializable {
 	/** Map layers. */
 	private List<Layer> layers;
 
+	/** Map Widgets. */
+	private List<Widget> mapWidgets;
+
 	/**
 	 * Constructor.
 	 */

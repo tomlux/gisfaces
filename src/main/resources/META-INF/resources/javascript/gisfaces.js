@@ -1778,8 +1778,11 @@ require([
 			title = properties.id;
 		}
 
-		// Set the default popup template.
-		graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
+		// Set the popup attributes, if specified.
+		if (properties.attributes && properties.attributes.length > 0) {
+			graphic.attributes = properties.attributes;
+			graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
+		}
 
 		return graphic;
 	}
