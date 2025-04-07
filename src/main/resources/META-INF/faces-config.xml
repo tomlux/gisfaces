@@ -11,7 +11,7 @@
 	<application>
 		<system-event-listener>
 			<system-event-listener-class>com.gisfaces.utilities.lifecycle.PostConstructApplicationEventListener</system-event-listener-class>
-			<system-event-class>javax.faces.event.PostConstructApplicationEvent</system-event-class>
+			<system-event-class>jakarta.faces.event.PostConstructApplicationEvent</system-event-class>
 		</system-event-listener>
 	</application>
 

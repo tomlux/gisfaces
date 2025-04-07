@@ -53,6 +53,7 @@ require(["dojo/ready"], function(ready) {
 
 // Create the map functions using the ESRI JavaScript library.
 require([
+	"esri/Basemap",
 	"esri/Color",
 	"esri/config",
 	"esri/Graphic",
@@ -107,6 +108,7 @@ require([
 	"esri/widgets/Track",
 	"dojo/domReady!"
 ], function(
+	Basemap,
 	Color,
 	esriConfig,
 	Graphic,
@@ -289,7 +291,7 @@ require([
 		console.log("Creating map.");
 
 		var props = {
-			basemap: basemap
+				basemap: basemap
 		};
 
 		if (ground) {
@@ -409,7 +411,7 @@ require([
 	/**
 	 * Function to create the basemap gallery widget.
 	 */
-	com.gisfaces.createBasemapGalleryWidget = function() {
+	com.gisfaces.createBasemapGalleryWidget = function() {		
 		console.log("Creating basemap gallery widget.");
 
 		com.gisfaces.basemapGallery = new BasemapGallery({
@@ -427,10 +429,15 @@ require([
 
 		// Attach a watch listener to the basemap gallery.
 		watchUtils.watch(com.gisfaces.basemapGallery, "activeBasemap", function(basemap) {
-			console.log("Basemap updated to '%s'.", basemap.title);
+			// Validate basemap before processing.
+			// The basemap gallery widget sometimes sends a basemap title "Basemap".
+			// The only useful basemap property is title.
+			if (basemap.title !== "Basemap") {
+				console.log("Basemap updated to '%s'.", basemap.title);
 
-			if (com.gisfaces.mapBasemapListener) {
-				com.gisfaces.mapBasemapListener(basemap.title);
+				if (com.gisfaces.mapBasemapListener) {
+					com.gisfaces.mapBasemapListener(basemap.title);
+				}
 			}
 		});
 	}
@@ -494,7 +501,7 @@ require([
 		com.gisfaces.track.on("track", function(event) {
 			if (event && event.position && event.position.coords) {
 				var c = event.position.coords;
-				console.log("Geolocation tracking position latitude='%s', longitude='%s', heading='%s', speed='%s', accuracy='%s', altitude='%s', altitudeAccuracy='%s', timestamp='%s'.", c.latitude, c.longitude, c.heading, c.speed, c.accuracy, c.altitude, c.altitudeAccuracy, event.position.timestamp);
+				console.log("Geolocation tracking position latitude='%s', longitude='%s', heading='%s', speed='%s', accuracy='%s', altitude='%s', altitudeAccuracy='%s', timestamp='%s'.", c.latitude, c.longitude, c.heading, c.speed, c.accuracy, c.altitude, c.altitudeAccuracy, event.position.timestamp);				
 
 				// Invoke registered listener.
 				if (com.gisfaces.mapGeoLocationListener) {
@@ -705,7 +712,7 @@ require([
 		console.log("Creating sketch widget for graphics layer '%s'.", layer.id);
 
 		// Get the map div rectangle.
-		var rect = com.gisfaces.view.container.childNodes[0].getBoundingClientRect();
+		var rect = com.gisfaces.view.container.childNodes[0].getBoundingClientRect(); 
 
 		// Calculate the offsets.
 		var top = rect.top + 15;
@@ -943,14 +950,21 @@ require([
 	}
 
 	/**
-	 * Function to set the map basemap. Note: there is a basemap gallery widget.
-	 * @param basemap Must be "streets", "satellite", "hybrid", "topo", "gray", "dark-gray", "oceans", "national-geographic", "terrain", "osm", "dark-gray-vector", "gray-vector", "streets-vector", "topo-vector", "streets-night-vector", "streets-relief-vector", "streets-navigation-vector".
+	 * Function to set the map basemap.
+	 * @param id Well known basemap ID.
+	 * @see https://developers.arcgis.com/javascript/latest/api-reference/esri-Map.html#basemap
 	 */
-	com.gisfaces.setMapBasemap = function(basemap) {
-		console.log("Setting map basemap to '%s'.", basemap);
+	com.gisfaces.setMapBasemap = function(id) {
+		// Get validated basemap.
+		var basemap = Basemap.fromId(id);
 
-		if (com.gisfaces.map) {
-			com.gisfaces.map.basemap = basemap;
+		if (basemap) {
+			if (com.gisfaces.map) {
+				console.log("Setting map basemap to '%s'.", id);
+				com.gisfaces.map.basemap = basemap;
+			}
+		} else {
+			console.log("Basemap '%s' was not found.", id);
 		}
 	}
 
@@ -1764,7 +1778,7 @@ require([
 			title = properties.id;
 		}
 
-		// Set the popup attributes, if specified.
+		// Set the default popup template.
 		if (properties.attributes && properties.attributes.length > 0) {
 			graphic.attributes = properties.attributes;
 			graphic.popupTemplate = com.gisfaces.createDefaultPopupTemplate(title);
@@ -1922,7 +1936,7 @@ require([
 		console.log("Zooming to target '%s' with options '%s'.", JSON.stringify(target), JSON.stringify(options));
 
 		// Execute the zoom.
-		return com.gisfaces.view.goTo(target, options);
+		return com.gisfaces.view.goTo(target, options);	
 	}
 
 	/**
@@ -2078,7 +2092,7 @@ require([
 
 	/**
 	 * Function to generate LOD levels based on the ESRI tiled background layers.
-	 * @param levels Maximum LOD level. Values 0-24 are the defaults for most ESRI background layers.
+	 * @param levels Maximum LOD level. Values 0-24 are the defaults for most ESRI background layers. 
 	 * @returns Array of LOD level information.
 	 */
 	com.gisfaces.generateLodLevels = function(levels) {
@@ -2171,10 +2185,10 @@ require([
 		console.log("Detecting browser WebGL support level.");
 
 		if (!! window.WebGLRenderingContext) {
-			var canvas = document.createElement("canvas");
-			var names = ["webgl2", "webgl", "experimental-webgl", "moz-webgl", "webkit-3d"];
+	        var canvas = document.createElement("canvas");
+	        var names = ["webgl2", "webgl", "experimental-webgl", "moz-webgl", "webkit-3d"];
 
-			for (var i in names) {
+	        for (var i in names) {
 				try {
 					var context = canvas.getContext(names[i]);
 					if (context && typeof context.getParameter === "function") {

@@ -27,10 +27,10 @@ package com.gisfaces.utilities.lifecycle;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
-import javax.faces.application.Application;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.SystemEvent;
-import javax.faces.event.SystemEventListener;
+import jakarta.faces.application.Application;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.SystemEvent;
+import jakarta.faces.event.SystemEventListener;
 
 /**
  * Post construction application event listener.

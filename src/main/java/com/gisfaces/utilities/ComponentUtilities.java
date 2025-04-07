@@ -26,17 +26,17 @@ package com.gisfaces.utilities;
 
 import java.util.List;
 import java.util.Map;
-import javax.el.ValueExpression;
-import javax.faces.application.Resource;
-import javax.faces.component.UICommand;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIForm;
-import javax.faces.component.UINamingContainer;
-import javax.faces.component.behavior.ClientBehavior;
-import javax.faces.component.behavior.ClientBehaviorContext;
-import javax.faces.component.behavior.ClientBehaviorHolder;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
+import jakarta.el.ValueExpression;
+import jakarta.faces.application.Resource;
+import jakarta.faces.component.UICommand;
+import jakarta.faces.component.UIComponent;
+import jakarta.faces.component.UIForm;
+import jakarta.faces.component.UINamingContainer;
+import jakarta.faces.component.behavior.ClientBehavior;
+import jakarta.faces.component.behavior.ClientBehaviorContext;
+import jakarta.faces.component.behavior.ClientBehaviorHolder;
+import jakarta.faces.context.ExternalContext;
+import jakarta.faces.context.FacesContext;
 
 /**
  * JSF component utilities.
@@ -330,13 +330,13 @@ public class ComponentUtilities {
 			if (!behaviors.isEmpty()) {
 				ExternalContext external = context.getExternalContext();
 				Map<String, String> params = external.getRequestParameterMap();
-				String behaviorEvent = params.get("javax.faces.behavior.event");
+				String behaviorEvent = params.get("jakarta.faces.behavior.event");
 
 				if (behaviorEvent != null) {
 					List<ClientBehavior> behaviorsForEvent = behaviors.get(behaviorEvent);
 
 					if (behaviors.size() > 0) {
-						String behaviorSource = params.get("javax.faces.source");
+						String behaviorSource = params.get("jakarta.faces.source");
 						String clientId = component.getClientId();
 
 						if ((behaviorSource != null) && (behaviorSource.equals(clientId))) {
@@ -401,7 +401,7 @@ public class ComponentUtilities {
 		boolean result = false;
 
 		// Get the requesting component ID.
-		String sourceId = fc.getExternalContext().getRequestParameterMap().get("javax.faces.source");
+		String sourceId = fc.getExternalContext().getRequestParameterMap().get("jakarta.faces.source");
 
 		if ((sourceId != null) && (sourceId.equals(clientId))) {
 			result = true;

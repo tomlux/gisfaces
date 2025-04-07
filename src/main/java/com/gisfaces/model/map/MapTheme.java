@@ -26,7 +26,7 @@ package com.gisfaces.model.map;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.faces.model.SelectItem;
+import jakarta.faces.model.SelectItem;
 
 /**
  * Map theme enum class.

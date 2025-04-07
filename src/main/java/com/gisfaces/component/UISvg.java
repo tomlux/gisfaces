@@ -27,10 +27,10 @@ package com.gisfaces.component;
 import com.gisfaces.utilities.ComponentUtilities;
 import com.gisfaces.utilities.StringUtilities;
 import java.io.IOException;
-import javax.faces.component.FacesComponent;
-import javax.faces.component.UIOutput;
-import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
+import jakarta.faces.component.FacesComponent;
+import jakarta.faces.component.UIOutput;
+import jakarta.faces.context.FacesContext;
+import jakarta.faces.context.ResponseWriter;
 
 /**
  * GIS SVG symbol.
