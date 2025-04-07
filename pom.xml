@@ -168,5 +168,14 @@
 			</plugin>
 		</plugins>
 	</build>
-
+	<distributionManagement>
+		<repository>
+			<id>PCH</id>
+			<url>http://nexus.pch.etat.lu/nexus/content/repositories/PCH</url>
+		</repository>
+		<snapshotRepository>
+			<id>PCHSnapshot</id>
+			<url>http://nexus.pch.etat.lu/nexus/content/repositories/PCHSnapshot</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
