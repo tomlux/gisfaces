@@ -6,7 +6,7 @@
 
 	<groupId>com.gisfaces</groupId>
 	<artifactId>gisfaces</artifactId>
-	<version>2.0.0.jakarta-SNAPSHOT</version>
+    <version>2.0.0.jakarta-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>GISFaces</name>
@@ -88,7 +88,7 @@
                             <version>3.5.0</version>
                             <configuration>
                                 <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-                                <source>7</source>
+					<source>8</source>
                                 <doctitle>${project.organization.name} ${project.version} API</doctitle>
                                 <defaultAuthor>${project.developers[0].name} (${project.developers[0].email})</defaultAuthor>
                                 <author>true</author>
@@ -102,7 +102,7 @@
                                 </execution>
                             </executions>
                         </plugin>
-            -->
+			-->
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
