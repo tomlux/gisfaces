@@ -65,8 +65,8 @@
 				<version>3.11.0</version>
 				<configuration>
 					<fork>true</fork>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -81,13 +81,14 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.5.0</version>
 				<configuration>
 					<javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
-					<source>7</source>
+					<source>8</source>
 					<doctitle>${project.organization.name} ${project.version} API</doctitle>
 					<defaultAuthor>${project.developers[0].name} (${project.developers[0].email})</defaultAuthor>
 					<author>true</author>
@@ -101,6 +102,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>yuicompressor-maven-plugin</artifactId>
