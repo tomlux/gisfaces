@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Map model class.
- * 
+ *
  * @author Chris Duncan (cduncan@gisfaces.com)
  */
 public class MapModel implements Serializable {
@@ -60,6 +60,9 @@ public class MapModel implements Serializable {
 	/** Map layers. */
 	private List<Layer> layers;
 
+	/** Map Widgets. */
+	private List<Widget> mapWidgets;
+
 	/**
 	 * Constructor.
 	 */
@@ -75,7 +78,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map dimension.
-	 * 
+	 *
 	 * @return
 	 */
 	public MapDimension getMapDimension() {
@@ -84,7 +87,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map dimension.
-	 * 
+	 *
 	 * @param mapDimension
 	 */
 	public void setMapDimension(MapDimension mapDimension) {
@@ -93,7 +96,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map theme.
-	 * 
+	 *
 	 * @return
 	 */
 	public MapTheme getMapTheme() {
@@ -102,7 +105,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map theme.
-	 * 
+	 *
 	 * @param mapTheme
 	 */
 	public void setMapTheme(MapTheme mapTheme) {
@@ -111,7 +114,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map basemap.
-	 * 
+	 *
 	 * @return
 	 */
 	public Basemap getBasemap() {
@@ -120,7 +123,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map basemap.
-	 * 
+	 *
 	 * @param basemap
 	 */
 	public void setBasemap(Basemap basemap) {
@@ -129,7 +132,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the web map portal item ID.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getWebMapPortalItemId() {
@@ -138,7 +141,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the web map portal item ID.
-	 * 
+	 *
 	 * @param webMapPortalItemId
 	 */
 	public void setWebMapPortalItemId(String webMapPortalItemId) {
@@ -147,7 +150,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map viewpoint.
-	 * 
+	 *
 	 * @return
 	 */
 	public Viewpoint getViewpoint() {
@@ -156,7 +159,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map viewpoint.
-	 * 
+	 *
 	 * @param viewpoint
 	 */
 	public void setViewpoint(Viewpoint viewpoint) {
@@ -165,7 +168,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map configuration.
-	 * 
+	 *
 	 * @return
 	 */
 	public Configuration getConfiguration() {
@@ -174,7 +177,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map configuration.
-	 * 
+	 *
 	 * @param configuration
 	 */
 	public void setConfiguration(Configuration configuration) {
@@ -183,7 +186,7 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to get the map layers.
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Layer> getLayers() {
@@ -192,10 +195,28 @@ public class MapModel implements Serializable {
 
 	/**
 	 * Method to set the map layers.
-	 * 
+	 *
 	 * @param layers
 	 */
 	public void setLayers(List<Layer> layers) {
 		this.layers = layers;
+	}
+
+	/**
+	 * Method to get the map widgets. (null assumes all widgets)
+	 *
+	 * @return
+	 */
+	public List<Widget> getMapWidgets() {
+		return mapWidgets;
+	}
+
+	/**
+	 * Method to set the map widgets.
+	 *
+	 * @param mapWidgets
+	 */
+	public void setMapWidgets(List<Widget> mapWidgets) {
+		this.mapWidgets = mapWidgets;
 	}
 }
